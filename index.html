@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Simulator 2025 - Live by Yash Nigam</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8a00ff;
+            --secondary: #00ffdd;
+            --bg-dark: #0f0f1a;
+            --card-bg: #1a1a2e;
+            --text-light: #e6e6ff;
+            --success: #00ff88;
+            --danger: #ff3366;
+            --accent: #ffd700;
+            --neutral: #aaaaaa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark), #141428);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: 0.1; }
+
+        header {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stock-switcher select, .theme-toggle, .logout-btn {
+            background: rgba(51, 51, 51, 0.8);
+            color: var(--text-light);
+            border: 1px solid var(--primary);
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stock-switcher select:hover, .theme-toggle:hover, .logout-btn:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 0 10px rgba(0, 255, 221, 0.3);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(138, 0, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .price-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            justify-content: center;
+            text-shadow: 0 0 10px rgba(0, 255, 221, 0.3);
+        }
+
+        .price-trend, .live-status {
+            font-size: 1.1rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .price-up { background: rgba(0, 255, 136, 0.2); color: var(--success); }
+        .price-down { background: rgba(255, 51, 102, 0.2); color: var(--danger); }
+        .live { background: rgba(0, 255, 136, 0.2); color: var(--success); }
+        .offline { background: rgba(255, 51, 102, 0.2); color: var(--danger); }
+
+        .portfolio-card summary, .history-card summary, .social-card summary, .education-card summary {
+            font-size: 1.4rem;
+            padding: 0.6rem 0;
+            cursor: pointer;
+            outline: none;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .portfolio-item, .history-item, .social-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-item:hover, .history-item:hover, .social-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .action-bar {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            position: sticky;
+            bottom: 0;
+            box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.4);
+            z-index: 999;
+        }
+
+        .action-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .quantity-input, .order-type, .limit-price-input {
+            padding: 0.8rem;
+            width: 100px;
+            background: rgba(51, 51, 51, 0.8);
+            border: 1px solid var(--primary);
+            color: var(--text-light);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-input:focus, .order-type:focus, .limit-price-input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 12px rgba(0, 255, 221, 0.4);
+            outline: none;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--text-light);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.8s ease, height 0.8s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 10px 30px rgba(138, 0, 255, 0.5);
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+        }
+
+        .btn:active::before {
+            width: 400%;
+            height: 400%;
+        }
+
+        .btn span { position: relative; z-index: 1; display: flex; align-items: center; gap: 0.5rem; }
+
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-light);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn.buy { background: linear-gradient(45deg, #00cc66, var(--secondary)); }
+        .btn.buy:hover { background: linear-gradient(45deg, var(--secondary), #00cc66); }
+        .btn.sell { background: linear-gradient(45deg, #ff3366, var(--primary)); }
+        .btn.sell:hover { background: linear-gradient(45deg, var(--primary), #ff3366); }
+
+        .toast {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-left: 5px solid var(--secondary);
+            padding: 1.2rem 2rem;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .toast.show { transform: translateX(0); }
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+
+        .history-card, .social-card { max-height: 300px; overflow-y: auto; }
+        .history-item, .social-item { font-size: 0.9rem; }
+
+        .education-card { padding: 1rem; font-size: 0.9rem; line-height: 1.8; }
+        .education-card ul { list-style: none; padding-left: 1rem; }
+        .education-card li::before { content: "→ "; color: var(--secondary); }
+
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .auth-card h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .auth-card input {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            background: rgba(51, 51, 51, 0.8);
+            border: 1px solid var(--primary);
+            color: var(--text-light);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .auth-card input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 12px rgba(0, 255, 221, 0.4);
+            outline: none;
+        }
+
+        .auth-toggle {
+            color: var(--secondary);
+            cursor: pointer;
+            margin-top: 1rem;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .auth-toggle:hover { color: var(--accent); text-decoration: underline; }
+
+        @media (max-width: 1024px) { .container { grid-template-columns: 1fr; } .action-controls { flex-wrap: wrap; } }
+        @media (max-width: 768px) { .price-display { font-size: 2rem; } .btn { padding: 0.8rem 2rem; } header { flex-direction: column; gap: 1rem; } }
+
+        body.light-theme { --bg-dark: #f0f0f5; --card-bg: #ffffff; --text-light: #333333; --neutral: #666666; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <!-- Authentication -->
+    <div class="auth-container" id="authPage">
+        <div class="auth-card" id="loginCard">
+            <h2>Login</h2>
+            <input type="text" id="loginUsername" placeholder="Username" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button class="btn" id="loginBtn"><span><i class="fas fa-sign-in-alt"></i> Login</span></button>
+            <span class="auth-toggle" id="toggleToSignUp">Need an account? Sign Up</span>
+        </div>
+        <div class="auth-card hidden" id="signUpCard">
+            <h2>Sign Up</h2>
+            <input type="text" id="signUpUsername" placeholder="Username" required>
+            <input type="password" id="signUpPassword" placeholder="Password" required>
+            <input type="password" id="signUpConfirmPassword" placeholder="Confirm Password" required>
+            <button class="btn" id="signUpBtn"><span><i class="fas fa-user-plus"></i> Sign Up</span></button>
+            <span class="auth-toggle" id="toggleToLogin">Already have an account? Login</span>
+        </div>
+    </div>
+
+    <!-- Simulator -->
+    <div class="simulator hidden" id="simulatorPage">
+        <canvas class="particles" id="particles"></canvas>
+        <header>
+            <h1>Stock Market Simulator 2025</h1>
+            <div class="stock-switcher">
+                <select id="stockSelect">
+                    <option value="AAPL">Apple (AAPL)</option>
+                    <option value="GOOGL">Google (GOOGL)</option>
+                    <option value="TSLA">Tesla (TSLA)</option>
+                    <option value="BTC">Bitcoin (BTC)</option>
+                </select>
+                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </header>
+        <div class="container">
+            <div class="card chart-card">
+                <div class="price-display">
+                    <span>$</span><span id="price">100</span>
+                    <span id="trend" class="price-trend"></span>
+                    <span id="liveStatus" class="live-status offline">Offline</span>
+                </div>
+                <canvas id="stockChart"></canvas>
+            </div>
+            <div class="card portfolio-card">
+                <details open>
+                    <summary>Portfolio Overview</summary>
+                    <div class="portfolio-item"><span>Cash:</span> $<span id="cash">10000</span></div>
+                    <div class="portfolio-item"><span>Stocks Owned:</span> <span id="stocks">0</span></div>
+                    <div class="portfolio-item"><span>Avg. Buy Price:</span> $<span id="avgPrice">0</span></div>
+                    <div class="portfolio-item"><span>Profit/Loss:</span> $<span id="pl">0</span></div>
+                    <div class="portfolio-item"><span>Total Value:</span> $<span id="totalValue">10000</span></div>
+                </details>
+            </div>
+            <div class="card history-card">
+                <details open>
+                    <summary>Transaction History</summary>
+                    <div id="history"></div>
+                </details>
+            </div>
+            <div class="card social-card">
+                <details open>
+                    <summary>Community Sentiment</summary>
+                    <div class="social-item"><span>Bullish:</span> <span id="bullish">50%</span></div>
+                    <div class="social-item"><span>Bearish:</span> <span id="bearish">50%</span></div>
+                </details>
+            </div>
+            <div class="card education-card">
+                <details open>
+                    <summary>Learn Trading</summary>
+                    <ul>
+                        <li>Buy low, sell high to maximize profits.</li>
+                        <li>Use limit orders to control your entry/exit points.</li>
+                        <li>Monitor market trends with technical indicators.</li>
+                        <li>Diversify your portfolio to reduce risk.</li>
+                    </ul>
+                </details>
+            </div>
+        </div>
+        <div class="action-bar">
+            <div class="action-controls">
+                <input type="number" class="quantity-input" id="quantity" min="1" value="1" placeholder="Qty">
+                <select class="order-type" id="orderType">
+                    <option value="market">Market</option>
+                    <option value="limit">Limit</option>
+                </select>
+                <input type="number" class="limit-price-input hidden" id="limitPrice" step="0.01" placeholder="Limit Price">
+                <button class="btn buy" id="buyBtn"><span><i class="fas fa-arrow-up"></i> Buy</span></button>
+                <button class="btn sell" id="sellBtn"><span><i class="fas fa-arrow-down"></i> Sell</span></button>
+            </div>
+        </div>
+        <div id="toast" class="toast"><i class="fas fa-info-circle"></i> <span id="toastMsg"></span></div>
+        <footer style="text-align: center; padding: 1rem; font-size: 0.8rem; color: var(--neutral);">
+            © 2025 Yash Nigam (yashnigam07). All rights reserved.
+        </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Secure password hashing using SHA-256 (requires HTTPS in production)
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        class StockSimulator {
+            constructor(username) {
+                this.username = username;
+                this.cash = 10000;
+                this.stocks = 0;
+                this.price = 100;
+                this.priceHistory = [100];
+                this.totalSpent = 0;
+                this.lastPrice = 100;
+                this.transactions = [];
+                this.sentiment = { bullish: 50, bearish: 50 };
+                this.currentStock = 'AAPL';
+                this.apiKey = config.apiKey; // Load API key from config.js
+                this.isLive = false;
+                this.apiCalls = 0;
+                this.maxApiCalls = 5; // Alpha Vantage free tier limit per minute
+
+                this.elements = {
+                    price: document.getElementById('price'),
+                    trend: document.getElementById('trend'),
+                    cash: document.getElementById('cash'),
+                    stocks: document.getElementById('stocks'),
+                    pl: document.getElementById('pl'),
+                    avgPrice: document.getElementById('avgPrice'),
+                    totalValue: document.getElementById('totalValue'),
+                    quantity: document.getElementById('quantity'),
+                    orderType: document.getElementById('orderType'),
+                    limitPrice: document.getElementById('limitPrice'),
+                    toast: document.getElementById('toast'),
+                    toastMsg: document.getElementById('toastMsg'),
+                    history: document.getElementById('history'),
+                    bullish: document.getElementById('bullish'),
+                    bearish: document.getElementById('bearish'),
+                    liveStatus: document.getElementById('liveStatus')
+                };
+
+                this.init();
+            }
+
+            async init() {
+                try {
+                    this.initChart();
+                    this.initParticles();
+                    this.bindEvents();
+                    this.loadFromLocalStorage();
+                    this.startSimulation();
+                } catch (error) {
+                    console.error('Initialization error:', error);
+                    this.showToast('Failed to initialize simulator', 'error');
+                }
+            }
+
+            initChart() {
+                const ctx = document.getElementById('stockChart').getContext('2d');
+                this.stockChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array(this.priceHistory.length).fill(''),
+                        datasets: [{
+                            label: 'Stock Price',
+                            data: this.priceHistory,
+                            borderColor: 'rgb(0, 255, 221)',
+                            backgroundColor: this.createGradient(ctx),
+                            fill: true,
+                            tension: 0.5,
+                            pointRadius: 0,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: { y: { beginAtZero: false, ticks: { callback: value => `$${value.toFixed(2)}` } }, x: { ticks: { maxTicksLimit: 12 } } },
+                        plugins: { legend: { display: false }, tooltip: { enabled: true } }
+                    }
+                });
+            }
+
+            createGradient(ctx) {
+                const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+                gradient.addColorStop(0, 'rgba(0, 255, 221, 0.25)');
+                gradient.addColorStop(1, 'rgba(0, 255, 221, 0)');
+                return gradient;
+            }
+
+            initParticles() {
+                const canvas = document.getElementById('particles');
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                const particles = Array.from({ length: 50 }, () => ({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 1,
+                    speed: Math.random() * 0.5 + 0.1
+                }));
+
+                let animationFrame;
+                const animate = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'rgba(138, 0, 255, 0.5)';
+                    particles.forEach(p => {
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                        ctx.fill();
+                        p.y -= p.speed;
+                        if (p.y < 0) p.y = canvas.height;
+                    });
+                    animationFrame = requestAnimationFrame(animate);
+                };
+                animate();
+
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) cancelAnimationFrame(animationFrame);
+                    else animate();
+                });
+            }
+
+            bindEvents() {
+                document.getElementById('buyBtn').addEventListener('click', () => this.buyStock());
+                document.getElementById('sellBtn').addEventListener('click', () => this.sellStock());
+                document.getElementById('stockSelect').addEventListener('change', () => this.changeStock());
+                document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
+                document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
+                this.elements.orderType.addEventListener('change', () => {
+                    this.elements.limitPrice.classList.toggle('hidden', this.elements.orderType.value !== 'limit');
+                });
+            }
+
+            startSimulation() {
+                this.updatePriceUI();
+                setInterval(() => this.fetchLivePrice(), 12000); // Adjusted for Alpha Vantage rate limit
+            }
+
+            async fetchLivePrice() {
+                if (this.apiCalls >= this.maxApiCalls) {
+                    this.simulatePrice();
+                    return;
+                }
+
+                const symbol = this.currentStock === 'BTC' ? 'BTCUSD' : this.currentStock;
+                const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${this.apiKey}`;
+
+                try {
+                    this.apiCalls++;
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    const quote = data['Global Quote'];
+                    if (!quote || !quote['05. price']) throw new Error('Invalid API response');
+                    this.lastPrice = this.price;
+                    this.price = parseFloat(quote['05. price']);
+                    this.isLive = true;
+                    this.elements.liveStatus.textContent = 'Live';
+                    this.elements.liveStatus.className = 'live-status live';
+                    this.updatePriceUI();
+                } catch (error) {
+                    console.error('Live price fetch failed:', error);
+                    this.showToast('Failed to fetch live data. Using simulation.', 'error');
+                    this.simulatePrice();
+                }
+            }
+
+            simulatePrice() {
+                this.lastPrice = this.price;
+                const volatility = this.currentStock === 'BTC' ? 50 : 15;
+                this.price += (Math.random() - 0.5) * volatility;
+                this.price = Math.max(10, Math.round(this.price * 100) / 100);
+                this.isLive = false;
+                this.elements.liveStatus.textContent = 'Offline';
+                this.elements.liveStatus.className = 'live-status offline';
+                this.updatePriceUI();
+            }
+
+            updatePriceUI() {
+                this.elements.price.textContent = this.price.toFixed(2);
+                const change = ((this.price - this.lastPrice) / this.lastPrice * 100).toFixed(2);
+                this.elements.trend.textContent = `${this.price > this.lastPrice ? '+' : ''}${change}%`;
+                this.elements.trend.className = `price-trend ${this.price > this.lastPrice ? 'price-up' : 'price-down'}`;
+                this.priceHistory.push(this.price);
+                if (this.priceHistory.length > 60) this.priceHistory.shift();
+                this.stockChart.data.labels = Array(this.priceHistory.length).fill('');
+                this.stockChart.data.datasets[0].data = this.priceHistory;
+                this.stockChart.update();
+                this.updatePortfolio();
+                this.updateSentiment();
+            }
+
+            buyStock() {
+                const qty = parseInt(this.elements.quantity.value);
+                const orderType = this.elements.orderType.value;
+                const limitPrice = orderType === 'limit' ? parseFloat(this.elements.limitPrice.value) : this.price;
+                const cost = limitPrice * qty;
+                const buyBtn = document.getElementById('buyBtn');
+
+                if (!this.validateOrder(qty, cost, 'buy')) return;
+
+                buyBtn.classList.add('loading');
+                buyBtn.disabled = true;
+
+                if (orderType === 'limit' && this.price > limitPrice) {
+                    this.showToast(`Waiting for price to drop to $${limitPrice.toFixed(2)}`, 'info');
+                    setTimeout(() => buyBtn.classList.remove('loading') && (buyBtn.disabled = false), 1000);
+                    return;
+                }
+
+                this.cash -= cost;
+                this.stocks += qty;
+                this.totalSpent += cost;
+                this.addTransaction('buy', qty, limitPrice);
+                this.updatePortfolio();
+                this.showToast(`Bought ${qty} stock${qty > 1 ? 's' : ''}`, 'success');
+                setTimeout(() => buyBtn.classList.remove('loading') && (buyBtn.disabled = false), 1000);
+            }
+
+            sellStock() {
+                const qty = parseInt(this.elements.quantity.value);
+                const orderType = this.elements.orderType.value;
+                const limitPrice = orderType === 'limit' ? parseFloat(this.elements.limitPrice.value) : this.price;
+                const revenue = limitPrice * qty;
+                const sellBtn = document.getElementById('sellBtn');
+
+                if (!this.validateOrder(qty, revenue, 'sell')) return;
+
+                sellBtn.classList.add('loading');
+                sellBtn.disabled = true;
+
+                if (orderType === 'limit' && this.price < limitPrice) {
+                    this.showToast(`Waiting for price to rise to $${limitPrice.toFixed(2)}`, 'info');
+                    setTimeout(() => sellBtn.classList.remove('loading') && (sellBtn.disabled = false), 1000);
+                    return;
+                }
+
+                this.cash += revenue;
+                this.stocks -= qty;
+                this.totalSpent -= (this.totalSpent / (this.stocks + qty)) * qty;
+                this.addTransaction('sell', qty, limitPrice);
+                this.updatePortfolio();
+                this.showToast(`Sold ${qty} stock${qty > 1 ? 's' : ''}`, 'success');
+                setTimeout(() => sellBtn.classList.remove('loading') && (sellBtn.disabled = false), 1000);
+            }
+
+            validateOrder(qty, amount, type) {
+                if (isNaN(qty) || qty <= 0 || !Number.isInteger(qty)) {
+                    this.showToast('Enter a positive whole number', 'error');
+                    return false;
+                }
+                if (type === 'buy' && this.cash < amount) {
+                    this.showToast('Insufficient funds!', 'error');
+                    return false;
+                }
+                if (type === 'sell' && this.stocks < qty) {
+                    this.showToast('Not enough stocks!', 'error');
+                    return false;
+                }
+                return true;
+            }
+
+            addTransaction(type, qty, price) {
+                this.transactions.unshift({ type, qty, price, time: new Date().toLocaleTimeString() });
+            }
+
+            updatePortfolio() {
+                this.elements.cash.textContent = this.cash.toFixed(2);
+                this.elements.stocks.textContent = this.stocks;
+                const avgPrice = this.stocks > 0 ? (this.totalSpent / this.stocks).toFixed(2) : '0.00';
+                this.elements.avgPrice.textContent = avgPrice;
+                const pl = (this.stocks * this.price + this.cash - 10000).toFixed(2);
+                this.elements.pl.textContent = pl;
+                this.elements.pl.style.color = pl >= 0 ? 'var(--success)' : 'var(--danger)';
+                this.elements.totalValue.textContent = (this.stocks * this.price + this.cash).toFixed(2);
+                this.updateHistory();
+                this.saveToLocalStorage();
+            }
+
+            updateHistory() {
+                this.elements.history.innerHTML = this.transactions.slice(0, 10).map(t => `
+                    <div class="history-item">
+                        <span>${t.type === 'buy' ? 'Bought' : 'Sold'} ${t.qty}</span>
+                        <span>$${t.price.toFixed(2)} @ ${t.time}</span>
+                    </div>
+                `).join('');
+            }
+
+            updateSentiment() {
+                const change = (this.price - this.lastPrice) / this.lastPrice;
+                this.sentiment.bullish = Math.min(90, Math.max(10, 50 + change * 100));
+                this.sentiment.bearish = 100 - this.sentiment.bullish;
+                this.elements.bullish.textContent = `${this.sentiment.bullish.toFixed(0)}%`;
+                this.elements.bearish.textContent = `${this.sentiment.bearish.toFixed(0)}%`;
+            }
+
+            showToast(message, type = 'info') {
+                this.elements.toastMsg.textContent = message;
+                this.elements.toast.className = `toast ${type}`;
+                this.elements.toast.classList.add('show');
+                clearTimeout(this.toastTimeout);
+                this.toastTimeout = setTimeout(() => this.elements.toast.classList.remove('show'), 3000);
+            }
+
+            changeStock() {
+                this.currentStock = document.getElementById('stockSelect').value;
+                this.priceHistory = [this.price];
+                this.apiCalls = 0; // Reset API call counter
+                this.fetchLivePrice();
+                this.showToast(`Switched to ${this.currentStock}`, 'success');
+            }
+
+            saveToLocalStorage() {
+                const data = {
+                    cash: this.cash,
+                    stocks: this.stocks,
+                    totalSpent: this.totalSpent,
+                    transactions: this.transactions,
+                    currentStock: this.currentStock
+                };
+                localStorage.setItem(`stockSimulator_${this.username}`, JSON.stringify(data));
+            }
+
+            loadFromLocalStorage() {
+                const data = JSON.parse(localStorage.getItem(`stockSimulator_${this.username}`));
+                if (data) {
+                    Object.assign(this, data);
+                    document.getElementById('stockSelect').value = this.currentStock;
+                    this.updatePortfolio();
+                }
+            }
+
+            toggleTheme() {
+                document.body.classList.toggle('light-theme');
+                const icon = document.querySelector('#themeToggle i');
+                icon.classList.toggle('fa-moon');
+                icon.classList.toggle('fa-sun');
+            }
+
+            logout() {
+                localStorage.removeItem(`stockSimulator_${this.username}`);
+                localStorage.removeItem('loggedInUser');
+                document.getElementById('simulatorPage').classList.add('hidden');
+                document.getElementById('authPage').classList.remove('hidden');
+                document.getElementById('loginCard').classList.remove('hidden');
+                document.getElementById('signUpCard').classList.add('hidden');
+                this.showToast('Logged out successfully', 'success');
+            }
+        }
+
+        function initAuth() {
+            const elements = {
+                loginBtn: document.getElementById('loginBtn'),
+                signUpBtn: document.getElementById('signUpBtn'),
+                toggleToSignUp: document.getElementById('toggleToSignUp'),
+                toggleToLogin: document.getElementById('toggleToLogin'),
+                loginUsername: document.getElementById('loginUsername'),
+                loginPassword: document.getElementById('loginPassword'),
+                signUpUsername: document.getElementById('signUpUsername'),
+                signUpPassword: document.getElementById('signUpPassword'),
+                signUpConfirmPassword: document.getElementById('signUpConfirmPassword'),
+                authPage: document.getElementById('authPage'),
+                simulatorPage: document.getElementById('simulatorPage'),
+                loginCard: document.getElementById('loginCard'),
+                signUpCard: document.getElementById('signUpCard'),
+                toast: document.getElementById('toast'),
+                toastMsg: document.getElementById('toastMsg')
+            };
+
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                elements.authPage.classList.add('hidden');
+                elements.simulatorPage.classList.remove('hidden');
+                new StockSimulator(loggedInUser);
+                return;
+            }
+
+            elements.toggleToSignUp.addEventListener('click', () => {
+                elements.loginCard.classList.add('hidden');
+                elements.signUpCard.classList.remove('hidden');
+            });
+
+            elements.toggleToLogin.addEventListener('click', () => {
+                elements.signUpCard.classList.add('hidden');
+                elements.loginCard.classList.remove('hidden');
+            });
+
+            elements.signUpBtn.addEventListener('click', async () => {
+                const username = elements.signUpUsername.value.trim();
+                const password = elements.signUpPassword.value.trim();
+                const confirmPassword = elements.signUpConfirmPassword.value.trim();
+
+                if (!username || !password || !confirmPassword) return showToast('Please fill all fields', 'error');
+                if (password !== confirmPassword) return showToast('Passwords do not match', 'error');
+
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                if (users[username]) return showToast('Username already exists', 'error');
+
+                const hashedPassword = await hashPassword(password);
+                users[username] = hashedPassword;
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('loggedInUser', username);
+                elements.authPage.classList.add('hidden');
+                elements.simulatorPage.classList.remove('hidden');
+                new StockSimulator(username);
+                showToast(`Welcome, ${username}!`, 'success');
+            });
+
+            elements.loginBtn.addEventListener('click', async () => {
+                const username = elements.loginUsername.value.trim();
+                const password = elements.loginPassword.value.trim();
+
+                if (!username || !password) return showToast('Please enter username and password', 'error');
+
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                const hashedPassword = await hashPassword(password);
+
+                if (!users[username] || users[username] !== hashedPassword) return showToast('Invalid credentials', 'error');
+
+                localStorage.setItem('loggedInUser', username);
+                elements.authPage.classList.add('hidden');
+                elements.simulatorPage.classList.remove('hidden');
+                new StockSimulator(username);
+                showToast(`Welcome back, ${username}!`, 'success');
+            });
+
+            function showToast(message, type) {
+                elements.toastMsg.textContent = message;
+                elements.toast.className = `toast ${type}`;
+                elements.toast.classList.add('show');
+                setTimeout(() => elements.toast.classList.remove('show'), 3000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                if (typeof config === 'undefined' || !config.apiKey) {
+                    throw new Error('API key not found. Please create config.js with your Alpha Vantage API key.');
+                }
+                initAuth();
+            } catch (error) {
+                console.error('Initialization failed:', error);
+                alert('Failed to start application: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
