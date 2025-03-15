@@ -20,7 +20,6 @@
             --neutral: #7a8299;
             --shadow: rgba(0, 0, 0, 0.5);
             --glow: 0 0 10px var(--accent-cyan);
-            transition: all 0.5s ease;
         }
 
         body.light-theme {
@@ -82,7 +81,6 @@
         .header-controls {
             display: flex;
             gap: 1rem;
-            align-items: center;
         }
 
         .header-controls select, .header-controls button {
@@ -98,11 +96,6 @@
         .header-controls select:hover, .header-controls button:hover {
             border-color: var(--accent-cyan);
             box-shadow: var(--glow);
-        }
-
-        #clock {
-            font-size: 0.9rem;
-            color: var(--neutral);
         }
 
         /* Main Layout */
@@ -122,12 +115,12 @@
             border-radius: 12px;
             padding: 1.5rem;
             box-shadow: 0 4px 20px var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 6px 25px var(--glow);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px var(--shadow);
         }
 
         .card h2 {
@@ -161,45 +154,6 @@
         .live { background: rgba(0, 230, 118, 0.2); color: var(--success); }
         .offline { background: rgba(255, 82, 82, 0.2); color: var(--danger); }
 
-        /* Chart Controls */
-        .chart-controls {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .chart-controls label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Timeframe Controls */
-        .timeframe-controls {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .timeframe-btn {
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            background: var(--bg-primary);
-            border: 1px solid var(--accent-cyan);
-        }
-
-        .timeframe-btn.active {
-            background: var(--accent-cyan);
-            color: var(--bg-primary);
-        }
-
-        /* Gradient for Chart */
-        canvas#priceChart {
-            background: linear-gradient(to bottom, rgba(0, 229, 255, 0.05), rgba(0, 0, 0, 0.1));
-            border-radius: 8px;
-        }
-
         /* Trading Panel */
         .trading-panel {
             background: var(--bg-secondary);
@@ -214,28 +168,6 @@
             flex-wrap: wrap;
             gap: 1rem;
             justify-content: center;
-            transition: transform 0.3s ease;
-        }
-
-        .trading-panel.collapsed {
-            transform: translateY(100%);
-        }
-
-        .toggle-panel {
-            position: absolute;
-            top: -2.5rem;
-            right: 1rem;
-            padding: 0.5rem;
-            border-radius: 50%;
-            width: 2rem;
-            height: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .trading-panel.collapsed .toggle-panel i {
-            transform: rotate(180deg);
         }
 
         .trading-panel input, .trading-panel select {
@@ -254,7 +186,7 @@
             outline: none;
         }
 
-        /* Button Styling */
+        /* Improved Button Styling */
         .btn {
             padding: 0.75rem 1.5rem;
             border: none;
@@ -267,10 +199,6 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 2px 10px var(--shadow);
-        }
-
-        .btn:active {
-            transform: scale(0.95);
         }
 
         .btn::before {
@@ -322,28 +250,55 @@
         .toast.error { border-left-color: var(--danger); }
         .toast.warning { border-left-color: var(--accent-orange); }
 
-        /* Sticky Analytics Card */
-        .analytics-card {
-            position: sticky;
-            top: 1rem;
-            max-height: calc(100vh - 2rem);
-            overflow-y: auto;
+        /* Auth Page */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
         }
 
-        /* Save Indicator */
-        .save-indicator {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            font-size: 0.8rem;
-            color: var(--success);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .auth-card {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 6px 25px var(--shadow);
+            text-align: center;
         }
 
-        .save-indicator.active {
-            opacity: 1;
+        .auth-card h2 {
+            font-size: 2rem;
+            color: var(--accent-cyan);
+            margin-bottom: 1.5rem;
         }
+
+        .auth-card input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--accent-purple);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .auth-card input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow);
+            outline: none;
+        }
+
+        .auth-toggle {
+            color: var(--accent-orange);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .auth-toggle:hover { color: var(--accent-cyan); }
 
         /* Footer */
         footer {
@@ -365,54 +320,48 @@
             font-size: 0.9rem;
         }
 
-        #tradeLog {
-            max-height: 150px;
-            overflow-y: auto;
-            font-size: 0.85rem;
-            margin-top: 1rem;
-        }
-
-        #tradeLog::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        #tradeLog::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-
-        #tradeLog::-webkit-scrollbar-thumb {
-            background: var(--accent-cyan);
-            border-radius: 4px;
-        }
-
-        #tradeLog::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-purple);
-        }
-
         /* Responsive Design */
         @media (max-width: 1200px) {
-            .simulator-grid { grid-template-columns: 1fr 1fr; }
-            .analytics-card { grid-column: span 2; position: static; }
+            .simulator-grid { grid-template-columns: 2fr 1fr; }
+            .card:nth-child(3) { grid-column: span 2; }
         }
 
         @media (max-width: 800px) {
             .simulator-grid { grid-template-columns: 1fr; }
-            .trading-panel { position: fixed; bottom: 0; left: 0; right: 0; margin: 0; border-radius: 12px 12px 0 0; }
+            .trading-panel { flex-direction: column; align-items: center; }
             .trading-panel input, .trading-panel select { width: 100%; }
             .price-display { font-size: 2rem; }
             .header-controls { flex-direction: column; gap: 0.5rem; }
-            .chart-controls, .timeframe-controls { flex-direction: column; }
         }
 
         .hidden { display: none; }
     </style>
 </head>
 <body>
-    <div class="simulator" id="simulatorPage">
+    <!-- Auth Page -->
+    <div class="auth-container" id="authPage">
+        <div class="auth-card" id="loginCard">
+            <h2>Login</h2>
+            <input type="text" id="loginUsername" placeholder="Username" required aria-label="Username">
+            <input type="password" id="loginPassword" placeholder="Password" required aria-label="Password">
+            <button class="btn btn-buy" id="loginBtn"><span><i class="fas fa-sign-in-alt"></i> Login</span></button>
+            <p class="auth-toggle" id="toggleToSignUp">New User? Sign Up</p>
+        </div>
+        <div class="auth-card hidden" id="signUpCard">
+            <h2>Sign Up</h2>
+            <input type="text" id="signUpUsername" placeholder="Username" required aria-label="Username">
+            <input type="password" id="signUpPassword" placeholder="Password" required aria-label="Password">
+            <input type="password" id="signUpConfirmPassword" placeholder="Confirm Password" required aria-label="Confirm Password">
+            <button class="btn btn-buy" id="signUpBtn"><span><i class="fas fa-user-plus"></i> Sign Up</span></button>
+            <p class="auth-toggle" id="toggleToLogin">Have an account? Login</p>
+        </div>
+    </div>
+
+    <!-- Simulator Page -->
+    <div class="simulator hidden" id="simulatorPage">
         <header>
             <h1>Quantum Stock Trader 2025</h1>
             <div class="header-controls">
-                <span id="clock"></span>
                 <select id="stockSelect" aria-label="Select Stock">
                     <option value="AAPL">Apple (AAPL)</option>
                     <option value="GOOGL">Google (GOOGL)</option>
@@ -424,7 +373,7 @@
                     <option value="light">Light</option>
                     <option value="minimal">Minimal</option>
                 </select>
-                <button class="btn" id="resetBtn"><span><i class="fas fa-redo"></i> Reset</span></button>
+                <button id="logoutBtn" aria-label="Logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </header>
 
@@ -434,16 +383,6 @@
                     $<span id="currentPrice">100.00</span>
                     <span id="priceTrend" class="price-trend"></span>
                     <span id="liveStatus" class="live-indicator offline">Offline</span>
-                </div>
-                <div class="chart-controls">
-                    <label><input type="checkbox" id="toggleEMA" checked> EMA(10)</label>
-                    <label><input type="checkbox" id="toggleRSI" checked> RSI</label>
-                    <label><input type="checkbox" id="toggleBB" checked> Bollinger Bands</label>
-                </div>
-                <div class="timeframe-controls">
-                    <button class="btn timeframe-btn" data-timeframe="1m">1M</button>
-                    <button class="btn timeframe-btn" data-timeframe="5m">5M</button>
-                    <button class="btn timeframe-btn" data-timeframe="1d">1D</button>
                 </div>
                 <canvas id="priceChart" aria-label="Stock Price Chart"></canvas>
             </div>
@@ -456,9 +395,6 @@
                 <div class="list-item"><span>Profit/Loss:</span> $<span id="profitLoss">0.00</span></div>
                 <div class="list-item"><span>Volatility:</span> <span id="volatility">0.00%</span></div>
                 <canvas id="performanceChart" aria-label="Portfolio Performance Chart" style="margin-top: 1rem;"></canvas>
-                <canvas id="portfolioPie" aria-label="Portfolio Breakdown" style="margin-top: 1rem; max-height: 200px;"></canvas>
-                <h2>Trade Log</h2>
-                <div id="tradeLog"></div>
             </div>
 
             <div class="card analytics-card">
@@ -473,8 +409,7 @@
             </div>
         </div>
 
-        <div class="trading-panel" id="tradingPanel">
-            <button class="btn toggle-panel" id="toggleTradingPanel"><i class="fas fa-chevron-up"></i></button>
+        <div class="trading-panel">
             <input type="number" id="quantity" min="1" value="1" placeholder="Quantity" aria-label="Quantity">
             <select id="orderType" aria-label="Order Type">
                 <option value="market">Market</option>
@@ -498,8 +433,6 @@
             <i class="fas fa-info-circle"></i> <span id="toastMessage"></span>
         </div>
 
-        <div class="save-indicator" id="saveIndicator">Saved</div>
-
         <footer>
             © 2025 Quantum Stock Trader by yashnigam07. All rights reserved.
         </footer>
@@ -507,6 +440,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
     <script src="config.js"></script>
     <script>
         // Utility Functions
@@ -518,40 +452,21 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         };
 
-        const showSaveIndicator = () => {
-            const indicator = $('saveIndicator');
-            indicator.classList.add('active');
-            setTimeout(() => indicator.classList.remove('active'), 1000);
-        };
-
         const notify = (title, body) => {
             if (Notification.permission === 'granted') new Notification(title, { body });
             else if (Notification.permission !== 'denied') Notification.requestPermission().then(p => p === 'granted' && new Notification(title, { body }));
         };
 
-        const formatDateTime = () => {
-            const now = new Date('2025-03-15T00:00:00');
-            now.setSeconds(now.getSeconds() + Math.floor(performance.now() / 1000));
-            return now.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
-        };
-
-        const debounce = (func, wait) => {
-            let timeout;
-            return (...args) => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), wait);
-            };
-        };
-
         // Simulator Class
         class StockSimulator {
-            constructor() {
+            constructor(username) {
+                this.username = username;
                 this.cash = 10000;
                 this.portfolio = {};
                 this.currentStock = 'AAPL';
                 this.stockPrices = { AAPL: 100, GOOGL: 100, TSLA: 100, BTC: 100 };
                 this.price = 100;
-                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: 100, volume: 500 }];
+                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: 100 }];
                 this.lastPrice = 100;
                 this.limitOrders = [];
                 this.stopLossOrders = [];
@@ -563,9 +478,7 @@
                 this.apiCalls = 0;
                 this.maxApiCalls = 5;
                 this.performanceHistory = [{ time: new Date().toLocaleTimeString(), value: 10000 }];
-                this.tradeLog = [];
                 this.apiKey = config.apiKey;
-                this.annotations = [];
                 this.init();
             }
 
@@ -578,45 +491,24 @@
                 Notification.requestPermission();
                 this.applyTheme();
                 this.toggleCollapsibleCards();
-                this.updateClock();
             }
 
             setupUI() {
+                $('simulatorPage').classList.remove('hidden');
+                $('authPage').classList.add('hidden');
+                $('stockSelect').value = this.currentStock;
+
                 $('buyBtn').addEventListener('click', () => this.handleBuy());
                 $('sellBtn').addEventListener('click', () => this.handleSell());
                 $('stockSelect').addEventListener('change', () => this.changeStock());
                 $('themeSelect').addEventListener('change', () => this.changeTheme());
+                $('logoutBtn').addEventListener('click', () => this.logout());
                 $('orderType').addEventListener('change', () => this.toggleOrderInputs());
                 $('voteBullish').addEventListener('click', () => this.vote('bullish'));
                 $('voteBearish').addEventListener('click', () => this.vote('bearish'));
                 $('exportBtn').addEventListener('click', () => this.exportData());
                 $('importBtn').addEventListener('click', () => $('importInput').click());
                 $('importInput').addEventListener('change', (e) => this.importData(e));
-                $('toggleTradingPanel').addEventListener('click', () => {
-                    const panel = $('tradingPanel');
-                    panel.classList.toggle('collapsed');
-                });
-                $('resetBtn').addEventListener('click', () => this.resetSimulator());
-
-                $('toggleEMA').addEventListener('change', () => {
-                    this.priceChart.data.datasets[1].hidden = !$('toggleEMA').checked;
-                    this.priceChart.update();
-                });
-                $('toggleRSI').addEventListener('change', () => {
-                    this.priceChart.data.datasets[2].hidden = !$('toggleRSI').checked;
-                    this.priceChart.update();
-                });
-                $('toggleBB').addEventListener('change', () => {
-                    this.priceChart.data.datasets[3].hidden = !$('toggleBB').checked;
-                    this.priceChart.data.datasets[4].hidden = !$('toggleBB').checked;
-                    this.priceChart.update();
-                });
-
-                // Keyboard Shortcuts
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'b' || e.key === 'B') this.handleBuy();
-                    if (e.key === 's' || e.key === 'S') this.handleSell();
-                });
             }
 
             toggleOrderInputs() {
@@ -634,65 +526,30 @@
             }
 
             setupCharts() {
-                const ctx = $('priceChart').getContext('2d');
-                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                gradient.addColorStop(0, 'rgba(0, 229, 255, 0.2)');
-                gradient.addColorStop(1, 'rgba(0, 229, 255, 0.05)');
-
                 this.priceChart = new Chart($('priceChart'), {
                     type: 'line',
                     data: {
                         labels: this.priceHistory.map(h => h.time),
                         datasets: [
-                            {
-                                label: 'Price',
-                                data: this.priceHistory.map(h => h.price),
-                                borderColor: 'var(--accent-cyan)',
-                                backgroundColor: gradient,
-                                fill: true,
-                                tension: 0.4,
-                                pointRadius: 0,
-                                pointHoverRadius: 5
-                            },
+                            { label: 'Price', data: this.priceHistory.map(h => h.price), borderColor: 'var(--accent-cyan)', fill: true, backgroundColor: 'rgba(0, 229, 255, 0.1)', tension: 0.3 },
                             { label: 'EMA(10)', data: this.calculateEMA(10), borderColor: 'var(--accent-orange)', fill: false, tension: 0.3 },
                             { label: 'RSI', data: this.calculateRSI(14), borderColor: 'var(--accent-purple)', yAxisID: 'rsi', fill: false, tension: 0.3 },
                             { label: 'Bollinger Upper', data: this.calculateBollingerBands(20).upper, borderColor: '#ffffff', fill: false, tension: 0.3, borderDash: [5, 5] },
-                            { label: 'Bollinger Lower', data: this.calculateBollingerBands(20).lower, borderColor: '#ffffff', fill: false, tension: 0.3, borderDash: [5, 5] },
-                            {
-                                label: 'Volume',
-                                type: 'bar',
-                                data: this.priceHistory.map(h => h.volume),
-                                backgroundColor: 'rgba(155, 89, 182, 0.5)',
-                                yAxisID: 'volume',
-                                barThickness: 10
-                            }
+                            { label: 'Bollinger Lower', data: this.calculateBollingerBands(20).lower, borderColor: '#ffffff', fill: false, tension: 0.3, borderDash: [5, 5] }
                         ]
                     },
                     options: {
                         responsive: true,
-                        animation: { duration: 1000, easing: 'easeInOutQuad' },
                         scales: {
                             y: { ticks: { callback: v => `$${v.toFixed(2)}` }, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
                             rsi: { position: 'right', min: 0, max: 100, ticks: { color: 'var(--accent-purple)' }, grid: { display: false } },
-                            volume: { position: 'left', max: 2000, display: false },
                             x: { ticks: { maxTicksLimit: 10 }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
                         },
                         plugins: {
-                            legend: { position: 'top', labels: { color: 'var(--text-primary)', boxWidth: 20 } },
-                            tooltip: {
-                                mode: 'index',
-                                intersect: false,
-                                callbacks: {
-                                    label: (context) => {
-                                        const dataset = context.dataset.label;
-                                        const value = context.parsed.y;
-                                        return `${dataset}: ${dataset === 'Price' ? '$' : ''}${value.toFixed(2)}${dataset === 'RSI' ? '' : dataset === 'Volume' ? ' shares' : ''}`;
-                                    }
-                                }
-                            },
-                            zoom: { zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'xy' }, pan: { enabled: true, mode: 'xy' } },
-                            annotation: {
-                                annotations: this.annotations
+                            legend: { position: 'top', labels: { color: 'var(--text-primary)' } },
+                            zoom: {
+                                zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'xy' },
+                                pan: { enabled: true, mode: 'xy' }
                             }
                         }
                     }
@@ -702,46 +559,13 @@
                     type: 'line',
                     data: {
                         labels: this.performanceHistory.map(h => h.time),
-                        datasets: [{
-                            label: 'Portfolio Value',
-                            data: this.performanceHistory.map(h => h.value),
-                            borderColor: 'var(--accent-orange)',
-                            backgroundColor: 'rgba(255, 140, 0, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        }]
+                        datasets: [{ label: 'Portfolio Value', data: this.performanceHistory.map(h => h.value), borderColor: 'var(--accent-orange)', fill: true, backgroundColor: 'rgba(255, 140, 0, 0.1)' }]
                     },
                     options: {
                         responsive: true,
-                        animation: { duration: 1000, easing: 'easeInOutQuad' },
                         scales: { y: { ticks: { callback: v => `$${v.toFixed(2)}` } }, x: { ticks: { maxTicksLimit: 10 } } },
                         plugins: { legend: { display: false } }
                     }
-                });
-
-                this.portfolioPie = new Chart($('portfolioPie'), {
-                    type: 'pie',
-                    data: {
-                        labels: ['Cash'],
-                        datasets: [{
-                            data: [this.cash],
-                            backgroundColor: ['var(--accent-cyan)', 'var(--accent-purple)', 'var(--accent-orange)', 'var(--success)']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { color: 'var(--text-primary)' } }
-                        }
-                    }
-                });
-
-                document.querySelectorAll('.timeframe-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        this.changeTimeframe(btn.dataset.timeframe);
-                    });
                 });
             }
 
@@ -766,12 +590,12 @@
                 }
                 let avgGain = gains.slice(0, period).reduce((a, b) => a + b, 0) / period;
                 let avgLoss = losses.slice(0, period).reduce((a, b) => a + b, 0) / period;
-                const rs = avgGain / avgLoss || 0;
+                const rs = avgGain / avgLoss;
                 const rsi = [null, ...Array(period - 1).fill(null), 100 - (100 / (1 + rs))];
                 for (let i = period; i < gains.length; i++) {
                     avgGain = (avgGain * (period - 1) + gains[i]) / period;
                     avgLoss = (avgLoss * (period - 1) + losses[i]) / period;
-                    rsi.push(100 - (100 / (1 + (avgGain / avgLoss || 0))));
+                    rsi.push(100 - (100 / (1 + avgGain / avgLoss)));
                 }
                 return rsi;
             }
@@ -796,15 +620,9 @@
             }
 
             startSimulation() {
-                this.priceUpdateInterval = setInterval(() => this.updatePrice(), 15000);
+                setInterval(() => this.updatePrice(), 15000);
                 setInterval(() => this.simulateDarkPool(), 30000);
-                setInterval(() => this.updateClock(), 1000);
-                this.debouncedUpdateUI = debounce(this.updateUI.bind(this), 200);
-                this.debouncedUpdateUI();
-            }
-
-            updateClock() {
-                $('clock').textContent = formatDateTime();
+                this.updateUI();
             }
 
             async updatePrice() {
@@ -812,7 +630,6 @@
                     try {
                         const symbol = this.currentStock === 'BTC' ? 'BTCUSD' : this.currentStock;
                         const res = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${this.apiKey}`);
-                        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
                         const data = await res.json();
                         if (data['Global Quote'] && data['Global Quote']['05. price']) {
                             this.lastPrice = this.price;
@@ -821,26 +638,23 @@
                             this.isLive = true;
                             this.apiCalls++;
                             showToast(`Live price updated for ${this.currentStock}`, 'success');
-                        } else {
-                            throw new Error('Invalid API response: No price data');
-                        }
+                        } else throw new Error('Invalid API response');
                     } catch (e) {
                         console.error('API fetch failed:', e);
                         this.simulatePrice();
-                        showToast(`Failed to fetch live data: ${e.message}. Using simulation`, 'warning');
+                        showToast('Failed to fetch live data, using simulation', 'warning');
                     }
                 } else {
                     this.simulatePrice();
                     showToast('API rate limit reached, using simulation', 'warning');
                 }
-                this.debouncedUpdateUI();
+                this.updateUI();
             }
 
             simulatePrice() {
                 this.lastPrice = this.price;
                 const volatility = this.currentStock === 'BTC' ? 0.05 : 0.02;
-                const change = (Math.random() - 0.5) * volatility;
-                this.price *= (1 + change);
+                this.price *= (1 + (Math.random() - 0.5) * volatility);
                 this.price = Math.max(10, this.price.toFixed(2));
                 this.stockPrices[this.currentStock] = this.price;
                 this.isLive = false;
@@ -848,25 +662,12 @@
 
             simulateDarkPool() {
                 const impact = (Math.random() - 0.5) * 0.03;
-                this.lastPrice = this.price;
                 this.price *= (1 + impact);
-                this.annotations.push({
-                    type: 'line',
-                    xMin: this.priceHistory.length - 1,
-                    xMax: this.priceHistory.length - 1,
-                    yMin: this.price * 0.95,
-                    yMax: this.price * 1.05,
-                    borderColor: impact > 0 ? 'var(--success)' : 'var(--danger)',
-                    borderWidth: 2,
-                    label: { content: 'Dark Pool', position: 'top', enabled: true, backgroundColor: 'rgba(0, 0, 0, 0.7)' }
-                });
                 showToast(`Dark pool trade: ${impact > 0 ? 'Buy' : 'Sell'} pressure`, impact > 0 ? 'success' : 'error');
-                this.debouncedUpdateUI();
+                this.updateUI();
             }
 
             updateUI() {
-                if (!this.priceChart.canvas.isIntersecting && !this.performanceChart.canvas.isIntersecting) return;
-
                 $('currentPrice').textContent = this.price.toFixed(2);
                 const change = ((this.price - this.lastPrice) / this.lastPrice * 100).toFixed(2);
                 $('priceTrend').textContent = `${change > 0 ? '+' : ''}${change}%`;
@@ -874,12 +675,8 @@
                 $('liveStatus').textContent = this.isLive ? 'Live' : 'Offline';
                 $('liveStatus').className = `live-indicator ${this.isLive ? 'live' : 'offline'}`;
 
-                const volume = Math.abs(this.price - this.lastPrice) * 100 + Math.random() * 500;
-                this.priceHistory.push({ time: new Date().toLocaleTimeString(), price: this.price, volume });
-                if (this.priceHistory.length > 60) {
-                    this.priceHistory.shift();
-                    this.annotations.shift();
-                }
+                this.priceHistory.push({ time: new Date().toLocaleTimeString(), price: this.price });
+                if (this.priceHistory.length > 60) this.priceHistory.shift();
                 this.priceChart.data.labels = this.priceHistory.map(h => h.time);
                 this.priceChart.data.datasets[0].data = this.priceHistory.map(h => h.price);
                 this.priceChart.data.datasets[1].data = this.calculateEMA(10);
@@ -887,8 +684,6 @@
                 const bb = this.calculateBollingerBands(20);
                 this.priceChart.data.datasets[3].data = bb.upper;
                 this.priceChart.data.datasets[4].data = bb.lower;
-                this.priceChart.data.datasets[5].data = this.priceHistory.map(h => h.volume);
-                this.priceChart.options.plugins.annotation.annotations = this.annotations;
                 this.priceChart.update();
 
                 const totalStocks = this.portfolio[this.currentStock]?.qty || 0;
@@ -903,10 +698,8 @@
                 $('profitLoss').style.color = profitLoss >= 0 ? 'var(--success)' : 'var(--danger)';
                 this.calculateVolatility();
                 this.updatePerformance(totalValue);
-                this.updatePortfolioPie();
                 this.updateAnalytics();
                 this.updateLeaderboard();
-                this.updateTradeLog();
                 this.checkOrders();
             }
 
@@ -936,16 +729,6 @@
                 this.performanceChart.update();
             }
 
-            updatePortfolioPie() {
-                const stockValues = Object.entries(this.portfolio).map(([stock, data]) => ({
-                    label: stock,
-                    value: data.qty * (this.stockPrices[stock] || 100)
-                }));
-                this.portfolioPie.data.labels = ['Cash', ...stockValues.map(s => s.label)];
-                this.portfolioPie.data.datasets[0].data = [this.cash, ...stockValues.map(s => s.value)];
-                this.portfolioPie.update();
-            }
-
             updateAnalytics() {
                 $('sharpeRatio').textContent = this.calculateSharpeRatio();
                 const totalVotes = this.sentiment.votes.bullish + this.sentiment.votes.bearish;
@@ -955,16 +738,10 @@
 
             updateLeaderboard() {
                 const totalValue = this.cash + Object.entries(this.portfolio).reduce((sum, [s, d]) => sum + d.qty * (this.stockPrices[s] || 100), 0);
-                this.leaderboard['Guest'] = totalValue;
+                this.leaderboard[this.username] = totalValue;
                 localStorage.setItem('leaderboard', JSON.stringify(this.leaderboard));
                 const sorted = Object.entries(this.leaderboard).sort((a, b) => b[1] - a[1]).slice(0, 5);
                 $('leaderboard').innerHTML = sorted.map(([user, val]) => `<div class="list-item"><span>${user}</span><span>$${val.toFixed(2)}</span></div>`).join('');
-            }
-
-            updateTradeLog() {
-                $('tradeLog').innerHTML = this.tradeLog.slice(-5).map(t => 
-                    `<div class="list-item"><span>${t.type} ${t.qty} ${t.stock}</span><span>$${t.price.toFixed(2)} @ ${t.time}</span></div>`
-                ).join('');
             }
 
             handleBuy() {
@@ -974,7 +751,7 @@
                 const leverage = type === 'short' ? parseInt($('leverage').value) : 1;
                 const cost = qty * price;
 
-                if (!this.validateOrder(qty, cost, price, leverage, 'buy')) return;
+                if (!this.validateOrder(qty, cost, 'buy')) return;
 
                 if (type === 'limit' && this.price > price) {
                     this.limitOrders.push({ type: 'buy', qty, price });
@@ -989,17 +766,15 @@
                     this.shortPositions.push({ qty, entryPrice: this.price, leverage, margin: cost / leverage });
                     this.cash -= cost / leverage;
                     showToast(`Short position opened: ${qty} ${this.currentStock} @ ${leverage}x`, 'info');
-                    this.tradeLog.push({ type: 'Short', qty, stock: this.currentStock, price, time: new Date().toLocaleTimeString() });
                 } else {
                     this.cash -= cost;
                     this.portfolio[this.currentStock] = this.portfolio[this.currentStock] || { qty: 0, totalSpent: 0 };
                     this.portfolio[this.currentStock].qty += qty;
                     this.portfolio[this.currentStock].totalSpent += cost;
                     showToast(`Bought ${qty} ${this.currentStock} for $${cost.toFixed(2)}`, 'success');
-                    this.tradeLog.push({ type: 'Buy', qty, stock: this.currentStock, price, time: new Date().toLocaleTimeString() });
                 }
                 this.saveData();
-                this.debouncedUpdateUI();
+                this.updateUI();
             }
 
             handleSell() {
@@ -1029,23 +804,14 @@
                     this.portfolio[this.currentStock].totalSpent -= avgCost * qty;
                     if (this.portfolio[this.currentStock].qty === 0) delete this.portfolio[this.currentStock];
                     showToast(`Sold ${qty} ${this.currentStock} for $${revenue.toFixed(2)}`, 'success');
-                    this.tradeLog.push({ type: 'Sell', qty, stock: this.currentStock, price, time: new Date().toLocaleTimeString() });
                 }
                 this.saveData();
-                this.debouncedUpdateUI();
+                this.updateUI();
             }
 
-            validateOrder(qty, amount, price, leverage, type) {
+            validateOrder(qty, amount, type) {
                 if (isNaN(qty) || qty <= 0 || !Number.isInteger(qty)) {
                     showToast('Quantity must be a positive integer', 'error');
-                    return false;
-                }
-                if (isNaN(price) || price <= 0) {
-                    showToast('Price must be a positive number', 'error');
-                    return false;
-                }
-                if (type === 'short' && (isNaN(leverage) || leverage < 1 || leverage > 10)) {
-                    showToast('Leverage must be between 1 and 10', 'error');
                     return false;
                 }
                 if (type === 'buy' && this.cash < amount) {
@@ -1058,19 +824,11 @@
             checkOrders() {
                 this.limitOrders = this.limitOrders.filter(o => {
                     if (o.type === 'buy' && this.price <= o.price) {
-                        this.cash -= o.qty * o.price;
-                        this.portfolio[this.currentStock] = this.portfolio[this.currentStock] || { qty: 0, totalSpent: 0 };
-                        this.portfolio[this.currentStock].qty += o.qty;
-                        this.portfolio[this.currentStock].totalSpent += o.qty * o.price;
-                        this.tradeLog.push({ type: 'Buy (Limit)', qty: o.qty, stock: this.currentStock, price: o.price, time: new Date().toLocaleTimeString() });
+                        this.handleBuy(o.qty, o.price);
                         notify('Limit Buy Executed', `${o.qty} ${this.currentStock} @ $${o.price.toFixed(2)}`);
                         return false;
                     } else if (o.type === 'sell' && this.price >= o.price) {
-                        this.cash += o.qty * o.price;
-                        const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
-                        this.portfolio[this.currentStock].qty -= o.qty;
-                        this.portfolio[this.currentStock].totalSpent -= avgCost * o.qty;
-                        this.tradeLog.push({ type: 'Sell (Limit)', qty: o.qty, stock: this.currentStock, price: o.price, time: new Date().toLocaleTimeString() });
+                        this.handleSell(o.qty, o.price);
                         notify('Limit Sell Executed', `${o.qty} ${this.currentStock} @ $${o.price.toFixed(2)}`);
                         return false;
                     }
@@ -1079,11 +837,7 @@
 
                 this.stopLossOrders = this.stopLossOrders.filter(o => {
                     if (this.price <= o.price) {
-                        this.cash += o.qty * this.price;
-                        const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
-                        this.portfolio[this.currentStock].qty -= o.qty;
-                        this.portfolio[this.currentStock].totalSpent -= avgCost * o.qty;
-                        this.tradeLog.push({ type: 'Sell (Stop-Loss)', qty: o.qty, stock: this.currentStock, price: this.price, time: new Date().toLocaleTimeString() });
+                        this.handleSell(o.qty, this.price);
                         notify('Stop-Loss Triggered', `${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`);
                         return false;
                     }
@@ -1092,11 +846,7 @@
 
                 this.takeProfitOrders = this.takeProfitOrders.filter(o => {
                     if (this.price >= o.price) {
-                        this.cash += o.qty * this.price;
-                        const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
-                        this.portfolio[this.currentStock].qty -= o.qty;
-                        this.portfolio[this.currentStock].totalSpent -= avgCost * o.qty;
-                        this.tradeLog.push({ type: 'Sell (Take-Profit)', qty: o.qty, stock: this.currentStock, price: this.price, time: new Date().toLocaleTimeString() });
+                        this.handleSell(o.qty, this.price);
                         notify('Take-Profit Triggered', `${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`);
                         return false;
                     }
@@ -1107,7 +857,6 @@
                     const loss = (this.price - p.entryPrice) * p.qty * p.leverage;
                     if (loss > p.margin * 0.9) {
                         this.cash -= loss;
-                        this.tradeLog.push({ type: 'Short Liquidated', qty: p.qty, stock: this.currentStock, price: this.price, time: new Date().toLocaleTimeString() });
                         showToast(`Short position liquidated: Loss $${loss.toFixed(2)}`, 'error');
                         notify('Short Liquidation', `Loss: $${loss.toFixed(2)}`);
                         return false;
@@ -1129,18 +878,10 @@
             changeStock() {
                 this.currentStock = $('stockSelect').value;
                 this.price = this.stockPrices[this.currentStock] || 100;
-                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: this.price, volume: 500 }];
-                this.annotations = [];
+                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: this.price }];
                 this.apiCalls = 0;
                 this.updatePrice();
                 showToast(`Switched to ${this.currentStock}`, 'info');
-            }
-
-            changeTimeframe(timeframe) {
-                const intervals = { '1m': 15000, '5m': 30000, '1d': 60000 };
-                clearInterval(this.priceUpdateInterval);
-                this.priceUpdateInterval = setInterval(() => this.updatePrice(), intervals[timeframe]);
-                showToast(`Switched to ${timeframe} timeframe`, 'info');
             }
 
             changeTheme() {
@@ -1156,7 +897,7 @@
             }
 
             saveData() {
-                localStorage.setItem('simulator_data', JSON.stringify({
+                localStorage.setItem(`simulator_${this.username}`, JSON.stringify({
                     cash: this.cash,
                     portfolio: this.portfolio,
                     currentStock: this.currentStock,
@@ -1166,28 +907,26 @@
                     shortPositions: this.shortPositions,
                     stockPrices: this.stockPrices,
                     sentiment: this.sentiment,
-                    performanceHistory: this.performanceHistory,
-                    tradeLog: this.tradeLog
+                    performanceHistory: this.performanceHistory
                 }));
-                showSaveIndicator();
             }
 
             loadData() {
-                const data = JSON.parse(localStorage.getItem('simulator_data'));
+                const data = JSON.parse(localStorage.getItem(`simulator_${this.username}`));
                 if (data) {
                     Object.assign(this, data);
                     $('stockSelect').value = this.currentStock;
-                    this.debouncedUpdateUI();
+                    this.updateUI();
                 }
             }
 
             exportData() {
-                const data = { cash: this.cash, portfolio: this.portfolio, tradeLog: this.tradeLog };
+                const data = { cash: this.cash, portfolio: this.portfolio };
                 const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `portfolio.json`;
+                a.download = `portfolio_${this.username}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
                 showToast('Portfolio exported', 'success');
@@ -1200,11 +939,10 @@
                 reader.onload = (ev) => {
                     try {
                         const data = JSON.parse(ev.target.result);
-                        this.cash = data.cash || 10000;
-                        this.portfolio = data.portfolio || {};
-                        this.tradeLog = data.tradeLog || [];
+                        this.cash = data.cash;
+                        this.portfolio = data.portfolio;
                         this.saveData();
-                        this.debouncedUpdateUI();
+                        this.updateUI();
                         showToast('Portfolio imported', 'success');
                     } catch (err) {
                         showToast('Invalid file format', 'error');
@@ -1213,39 +951,71 @@
                 reader.readAsText(file);
             }
 
-            resetSimulator() {
-                this.cash = 10000;
-                this.portfolio = {};
-                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: this.price, volume: 500 }];
-                this.limitOrders = [];
-                this.stopLossOrders = [];
-                this.takeProfitOrders = [];
-                this.shortPositions = [];
-                this.sentiment = { bullish: 50, bearish: 50, votes: { bullish: 0, bearish: 0 } };
-                this.performanceHistory = [{ time: new Date().toLocaleTimeString(), value: 10000 }];
-                this.tradeLog = [];
-                this.annotations = [];
-                this.saveData();
-                this.debouncedUpdateUI();
-                showToast('Simulator reset', 'success');
+            logout() {
+                localStorage.removeItem('loggedInUser');
+                $('simulatorPage').classList.add('hidden');
+                $('authPage').classList.remove('hidden');
+                $('loginCard').classList.remove('hidden');
+                $('signUpCard').classList.add('hidden');
+                showToast('Logged out', 'info');
             }
         }
 
-        // Intersection Observer for Lazy Loading
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                entry.target.isIntersecting = entry.isIntersecting;
-            });
-        }, { threshold: 0.1 });
+        // Authentication
+        class Auth {
+            static init() {
+                const loggedInUser = localStorage.getItem('loggedInUser');
+                if (loggedInUser) return new StockSimulator(loggedInUser);
+
+                $('loginBtn').addEventListener('click', Auth.login);
+                $('signUpBtn').addEventListener('click', Auth.signUp);
+                $('toggleToSignUp').addEventListener('click', () => {
+                    $('loginCard').classList.add('hidden');
+                    $('signUpCard').classList.remove('hidden');
+                });
+                $('toggleToLogin').addEventListener('click', () => {
+                    $('signUpCard').classList.add('hidden');
+                    $('loginCard').classList.remove('hidden');
+                });
+            }
+
+            static async login() {
+                const username = $('loginUsername').value.trim();
+                const password = $('loginPassword').value.trim();
+                if (!username || !password) return showToast('All fields required', 'error');
+
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                if (!users[username] || !(await bcrypt.compare(password, users[username]))) {
+                    return showToast('Invalid credentials', 'error');
+                }
+
+                localStorage.setItem('loggedInUser', username);
+                new StockSimulator(username);
+            }
+
+            static async signUp() {
+                const username = $('signUpUsername').value.trim();
+                const password = $('signUpPassword').value.trim();
+                const confirm = $('signUpConfirmPassword').value.trim();
+                if (!username || !password || !confirm) return showToast('All fields required', 'error');
+                if (password !== confirm) return showToast('Passwords do not match', 'error');
+
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                if (users[username]) return showToast('Username taken', 'error');
+
+                users[username] = await bcrypt.hash(password, 10);
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('loggedInUser', username);
+                new StockSimulator(username);
+            }
+        }
 
         // Start App
         document.addEventListener('DOMContentLoaded', () => {
             if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
                 showToast('Warning: Use HTTPS for security', 'warning');
             }
-            const simulator = new StockSimulator();
-            observer.observe(simulator.priceChart.canvas);
-            observer.observe(simulator.performanceChart.canvas);
+            Auth.init();
         });
     </script>
 </body>
