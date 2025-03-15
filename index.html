@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* [CSS remains unchanged from previous response] */
+        /* Theme Variables */
         :root {
             --bg-primary: #0d0d1a;
             --bg-secondary: #1a1a2e;
@@ -121,12 +121,12 @@
             border-radius: 12px;
             padding: 1.5rem;
             box-shadow: 0 4px 20px var(--shadow);
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 25px var(--shadow);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 6px 25px var(--glow);
         }
 
         .card h2 {
@@ -174,6 +174,31 @@
             gap: 0.5rem;
         }
 
+        /* Timeframe Controls */
+        .timeframe-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .timeframe-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--accent-cyan);
+        }
+
+        .timeframe-btn.active {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
+
+        /* Gradient for Chart */
+        canvas#priceChart {
+            background: linear-gradient(to bottom, rgba(0, 229, 255, 0.05), rgba(0, 0, 0, 0.1));
+            border-radius: 8px;
+        }
+
         /* Trading Panel */
         .trading-panel {
             background: var(--bg-secondary);
@@ -188,6 +213,28 @@
             flex-wrap: wrap;
             gap: 1rem;
             justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .trading-panel.collapsed {
+            transform: translateY(100%);
+        }
+
+        .toggle-panel {
+            position: absolute;
+            top: -2.5rem;
+            right: 1rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .trading-panel.collapsed .toggle-panel i {
+            transform: rotate(180deg);
         }
 
         .trading-panel input, .trading-panel select {
@@ -206,7 +253,7 @@
             outline: none;
         }
 
-        /* Improved Button Styling */
+        /* Button Styling */
         .btn {
             padding: 0.75rem 1.5rem;
             border: none;
@@ -270,55 +317,13 @@
         .toast.error { border-left-color: var(--danger); }
         .toast.warning { border-left-color: var(--accent-orange); }
 
-        /* Auth Page */
-        .auth-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
+        /* Sticky Analytics Card */
+        .analytics-card {
+            position: sticky;
+            top: 1rem;
+            max-height: calc(100vh - 2rem);
+            overflow-y: auto;
         }
-
-        .auth-card {
-            background: var(--bg-secondary);
-            padding: 2rem;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 6px 25px var(--shadow);
-            text-align: center;
-        }
-
-        .auth-card h2 {
-            font-size: 2rem;
-            color: var(--accent-cyan);
-            margin-bottom: 1.5rem;
-        }
-
-        .auth-card input {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--accent-purple);
-            border-radius: 8px;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-
-        .auth-card input:focus {
-            border-color: var(--accent-cyan);
-            box-shadow: var(--glow);
-            outline: none;
-        }
-
-        .auth-toggle {
-            color: var(--accent-orange);
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .auth-toggle:hover { color: var(--accent-cyan); }
 
         /* Footer */
         footer {
@@ -347,46 +352,44 @@
             margin-top: 1rem;
         }
 
+        #tradeLog::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #tradeLog::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        #tradeLog::-webkit-scrollbar-thumb {
+            background: var(--accent-cyan);
+            border-radius: 4px;
+        }
+
+        #tradeLog::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-purple);
+        }
+
         /* Responsive Design */
         @media (max-width: 1200px) {
-            .simulator-grid { grid-template-columns: 2fr 1fr; }
-            .card:nth-child(3) { grid-column: span 2; }
+            .simulator-grid { grid-template-columns: 1fr 1fr; }
+            .analytics-card { grid-column: span 2; position: static; }
         }
 
         @media (max-width: 800px) {
             .simulator-grid { grid-template-columns: 1fr; }
-            .trading-panel { flex-direction: column; align-items: center; }
+            .trading-panel { position: fixed; bottom: 0; left: 0; right: 0; margin: 0; border-radius: 12px 12px 0 0; }
             .trading-panel input, .trading-panel select { width: 100%; }
             .price-display { font-size: 2rem; }
             .header-controls { flex-direction: column; gap: 0.5rem; }
-            .chart-controls { flex-direction: column; }
+            .chart-controls, .timeframe-controls { flex-direction: column; }
         }
 
         .hidden { display: none; }
     </style>
 </head>
 <body>
-    <!-- Auth Page -->
-    <div class="auth-container" id="authPage">
-        <div class="auth-card" id="loginCard">
-            <h2>Login</h2>
-            <input type="text" id="loginUsername" placeholder="Username" required aria-label="Username">
-            <input type="password" id="loginPassword" placeholder="Password" required aria-label="Password">
-            <button class="btn btn-buy" id="loginBtn"><span><i class="fas fa-sign-in-alt"></i> Login</span></button>
-            <p class="auth-toggle" id="toggleToSignUp">New User? Sign Up</p>
-        </div>
-        <div class="auth-card hidden" id="signUpCard">
-            <h2>Sign Up</h2>
-            <input type="text" id="signUpUsername" placeholder="Username" required aria-label="Username">
-            <input type="password" id="signUpPassword" placeholder="Password" required aria-label="Password">
-            <input type="password" id="signUpConfirmPassword" placeholder="Confirm Password" required aria-label="Confirm Password">
-            <button class="btn btn-buy" id="signUpBtn"><span><i class="fas fa-user-plus"></i> Sign Up</span></button>
-            <p class="auth-toggle" id="toggleToLogin">Have an account? Login</p>
-        </div>
-    </div>
-
-    <!-- Simulator Page -->
-    <div class="simulator hidden" id="simulatorPage">
+    <!-- Simulator Page (No Auth Page) -->
+    <div class="simulator" id="simulatorPage">
         <header>
             <h1>Quantum Stock Trader 2025</h1>
             <div class="header-controls">
@@ -402,7 +405,6 @@
                     <option value="light">Light</option>
                     <option value="minimal">Minimal</option>
                 </select>
-                <button id="logoutBtn" aria-label="Logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </header>
 
@@ -417,6 +419,11 @@
                     <label><input type="checkbox" id="toggleEMA" checked> EMA(10)</label>
                     <label><input type="checkbox" id="toggleRSI" checked> RSI</label>
                     <label><input type="checkbox" id="toggleBB" checked> Bollinger Bands</label>
+                </div>
+                <div class="timeframe-controls">
+                    <button class="btn timeframe-btn" data-timeframe="1m">1M</button>
+                    <button class="btn timeframe-btn" data-timeframe="5m">5M</button>
+                    <button class="btn timeframe-btn" data-timeframe="1d">1D</button>
                 </div>
                 <canvas id="priceChart" aria-label="Stock Price Chart"></canvas>
             </div>
@@ -445,7 +452,8 @@
             </div>
         </div>
 
-        <div class="trading-panel">
+        <div class="trading-panel" id="tradingPanel">
+            <button class="btn toggle-panel" id="toggleTradingPanel"><i class="fas fa-chevron-up"></i></button>
             <input type="number" id="quantity" min="1" value="1" placeholder="Quantity" aria-label="Quantity">
             <select id="orderType" aria-label="Order Type">
                 <option value="market">Market</option>
@@ -476,7 +484,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
     <script src="config.js"></script>
     <script>
         // Utility Functions
@@ -494,15 +501,14 @@
         };
 
         const formatDateTime = () => {
-            const now = new Date('2025-03-15T00:00:00'); // Base date from your context
-            now.setSeconds(now.getSeconds() + Math.floor(performance.now() / 1000)); // Simulate progression
+            const now = new Date('2025-03-15T00:00:00');
+            now.setSeconds(now.getSeconds() + Math.floor(performance.now() / 1000));
             return now.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
         };
 
         // Simulator Class
         class StockSimulator {
-            constructor(username) {
-                this.username = username;
+            constructor() {
                 this.cash = 10000;
                 this.portfolio = {};
                 this.currentStock = 'AAPL';
@@ -538,23 +544,21 @@
             }
 
             setupUI() {
-                $('simulatorPage').classList.remove('hidden');
-                $('authPage').classList.add('hidden');
-                $('stockSelect').value = this.currentStock;
-
                 $('buyBtn').addEventListener('click', () => this.handleBuy());
                 $('sellBtn').addEventListener('click', () => this.handleSell());
                 $('stockSelect').addEventListener('change', () => this.changeStock());
                 $('themeSelect').addEventListener('change', () => this.changeTheme());
-                $('logoutBtn').addEventListener('click', () => this.logout());
                 $('orderType').addEventListener('change', () => this.toggleOrderInputs());
                 $('voteBullish').addEventListener('click', () => this.vote('bullish'));
                 $('voteBearish').addEventListener('click', () => this.vote('bearish'));
                 $('exportBtn').addEventListener('click', () => this.exportData());
                 $('importBtn').addEventListener('click', () => $('importInput').click());
                 $('importInput').addEventListener('change', (e) => this.importData(e));
+                $('toggleTradingPanel').addEventListener('click', () => {
+                    const panel = $('tradingPanel');
+                    panel.classList.toggle('collapsed');
+                });
 
-                // Chart toggles
                 $('toggleEMA').addEventListener('change', () => {
                     this.priceChart.data.datasets[1].hidden = !$('toggleEMA').checked;
                     this.priceChart.update();
@@ -585,31 +589,63 @@
             }
 
             setupCharts() {
+                const ctx = $('priceChart').getContext('2d');
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(0, 229, 255, 0.2)');
+                gradient.addColorStop(1, 'rgba(0, 229, 255, 0.05)');
+
                 this.priceChart = new Chart($('priceChart'), {
                     type: 'line',
                     data: {
                         labels: this.priceHistory.map(h => h.time),
                         datasets: [
-                            { label: 'Price', data: this.priceHistory.map(h => h.price), borderColor: 'var(--accent-cyan)', fill: true, backgroundColor: 'rgba(0, 229, 255, 0.1)', tension: 0.3 },
+                            {
+                                label: 'Price',
+                                data: this.priceHistory.map(h => h.price),
+                                borderColor: 'var(--accent-cyan)',
+                                backgroundColor: gradient,
+                                fill: true,
+                                tension: 0.4,
+                                pointRadius: 0,
+                                pointHoverRadius: 5
+                            },
                             { label: 'EMA(10)', data: this.calculateEMA(10), borderColor: 'var(--accent-orange)', fill: false, tension: 0.3 },
                             { label: 'RSI', data: this.calculateRSI(14), borderColor: 'var(--accent-purple)', yAxisID: 'rsi', fill: false, tension: 0.3 },
                             { label: 'Bollinger Upper', data: this.calculateBollingerBands(20).upper, borderColor: '#ffffff', fill: false, tension: 0.3, borderDash: [5, 5] },
-                            { label: 'Bollinger Lower', data: this.calculateBollingerBands(20).lower, borderColor: '#ffffff', fill: false, tension: 0.3, borderDash: [5, 5] }
+                            { label: 'Bollinger Lower', data: this.calculateBollingerBands(20).lower, borderColor: '#ffffff', fill: false, tension: 0.3, borderDash: [5, 5] },
+                            {
+                                label: 'Volume',
+                                type: 'bar',
+                                data: this.priceHistory.map(() => Math.random() * 1000),
+                                backgroundColor: 'rgba(155, 89, 182, 0.5)',
+                                yAxisID: 'volume',
+                                barThickness: 10
+                            }
                         ]
                     },
                     options: {
                         responsive: true,
+                        animation: { duration: 1000, easing: 'easeInOutQuad' },
                         scales: {
                             y: { ticks: { callback: v => `$${v.toFixed(2)}` }, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
                             rsi: { position: 'right', min: 0, max: 100, ticks: { color: 'var(--accent-purple)' }, grid: { display: false } },
+                            volume: { position: 'left', max: 2000, display: false },
                             x: { ticks: { maxTicksLimit: 10 }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
                         },
                         plugins: {
-                            legend: { position: 'top', labels: { color: 'var(--text-primary)' } },
-                            zoom: {
-                                zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'xy' },
-                                pan: { enabled: true, mode: 'xy' }
-                            }
+                            legend: { position: 'top', labels: { color: 'var(--text-primary)', boxWidth: 20 } },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: (context) => {
+                                        const dataset = context.dataset.label;
+                                        const value = context.parsed.y;
+                                        return `${dataset}: ${dataset === 'Price' ? '$' : ''}${value.toFixed(2)}${dataset === 'RSI' ? '' : ''}`;
+                                    }
+                                }
+                            },
+                            zoom: { zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'xy' }, pan: { enabled: true, mode: 'xy' } }
                         }
                     }
                 });
@@ -618,13 +654,29 @@
                     type: 'line',
                     data: {
                         labels: this.performanceHistory.map(h => h.time),
-                        datasets: [{ label: 'Portfolio Value', data: this.performanceHistory.map(h => h.value), borderColor: 'var(--accent-orange)', fill: true, backgroundColor: 'rgba(255, 140, 0, 0.1)' }]
+                        datasets: [{
+                            label: 'Portfolio Value',
+                            data: this.performanceHistory.map(h => h.value),
+                            borderColor: 'var(--accent-orange)',
+                            backgroundColor: 'rgba(255, 140, 0, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
                     },
                     options: {
                         responsive: true,
+                        animation: { duration: 1000, easing: 'easeInOutQuad' },
                         scales: { y: { ticks: { callback: v => `$${v.toFixed(2)}` } }, x: { ticks: { maxTicksLimit: 10 } } },
                         plugins: { legend: { display: false } }
                     }
+                });
+
+                document.querySelectorAll('.timeframe-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.changeTimeframe(btn.dataset.timeframe);
+                    });
                 });
             }
 
@@ -679,7 +731,7 @@
             }
 
             startSimulation() {
-                setInterval(() => this.updatePrice(), 15000);
+                this.priceUpdateInterval = setInterval(() => this.updatePrice(), 15000);
                 setInterval(() => this.simulateDarkPool(), 30000);
                 setInterval(() => this.updateClock(), 1000);
                 this.updateUI();
@@ -751,6 +803,7 @@
                 const bb = this.calculateBollingerBands(20);
                 this.priceChart.data.datasets[3].data = bb.upper;
                 this.priceChart.data.datasets[4].data = bb.lower;
+                this.priceChart.data.datasets[5].data = this.priceHistory.map(() => Math.random() * 1000);
                 this.priceChart.update();
 
                 const totalStocks = this.portfolio[this.currentStock]?.qty || 0;
@@ -806,7 +859,7 @@
 
             updateLeaderboard() {
                 const totalValue = this.cash + Object.entries(this.portfolio).reduce((sum, [s, d]) => sum + d.qty * (this.stockPrices[s] || 100), 0);
-                this.leaderboard[this.username] = totalValue;
+                this.leaderboard['Guest'] = totalValue; // Default user as "Guest"
                 localStorage.setItem('leaderboard', JSON.stringify(this.leaderboard));
                 const sorted = Object.entries(this.leaderboard).sort((a, b) => b[1] - a[1]).slice(0, 5);
                 $('leaderboard').innerHTML = sorted.map(([user, val]) => `<div class="list-item"><span>${user}</span><span>$${val.toFixed(2)}</span></div>`).join('');
@@ -978,6 +1031,13 @@
                 showToast(`Switched to ${this.currentStock}`, 'info');
             }
 
+            changeTimeframe(timeframe) {
+                const intervals = { '1m': 15000, '5m': 30000, '1d': 60000 };
+                clearInterval(this.priceUpdateInterval);
+                this.priceUpdateInterval = setInterval(() => this.updatePrice(), intervals[timeframe]);
+                showToast(`Switched to ${timeframe} timeframe`, 'info');
+            }
+
             changeTheme() {
                 const theme = $('themeSelect').value;
                 document.body.className = `${theme}-theme`;
@@ -991,7 +1051,7 @@
             }
 
             saveData() {
-                localStorage.setItem(`simulator_${this.username}`, JSON.stringify({
+                localStorage.setItem('simulator_data', JSON.stringify({
                     cash: this.cash,
                     portfolio: this.portfolio,
                     currentStock: this.currentStock,
@@ -1007,7 +1067,7 @@
             }
 
             loadData() {
-                const data = JSON.parse(localStorage.getItem(`simulator_${this.username}`));
+                const data = JSON.parse(localStorage.getItem('simulator_data'));
                 if (data) {
                     Object.assign(this, data);
                     $('stockSelect').value = this.currentStock;
@@ -1021,7 +1081,7 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `portfolio_${this.username}.json`;
+                a.download = `portfolio.json`;
                 a.click();
                 URL.revokeObjectURL(url);
                 showToast('Portfolio exported', 'success');
@@ -1046,64 +1106,6 @@
                 };
                 reader.readAsText(file);
             }
-
-            logout() {
-                localStorage.removeItem('loggedInUser');
-                $('simulatorPage').classList.add('hidden');
-                $('authPage').classList.remove('hidden');
-                $('loginCard').classList.remove('hidden');
-                $('signUpCard').classList.add('hidden');
-                showToast('Logged out', 'info');
-            }
-        }
-
-        // Authentication
-        class Auth {
-            static init() {
-                const loggedInUser = localStorage.getItem('loggedInUser');
-                if (loggedInUser) return new StockSimulator(loggedInUser);
-
-                $('loginBtn').addEventListener('click', Auth.login);
-                $('signUpBtn').addEventListener('click', Auth.signUp);
-                $('toggleToSignUp').addEventListener('click', () => {
-                    $('loginCard').classList.add('hidden');
-                    $('signUpCard').classList.remove('hidden');
-                });
-                $('toggleToLogin').addEventListener('click', () => {
-                    $('signUpCard').classList.add('hidden');
-                    $('loginCard').classList.remove('hidden');
-                });
-            }
-
-            static async login() {
-                const username = $('loginUsername').value.trim();
-                const password = $('loginPassword').value.trim();
-                if (!username || !password) return showToast('All fields required', 'error');
-
-                const users = JSON.parse(localStorage.getItem('users') || '{}');
-                if (!users[username] || !(await bcrypt.compare(password, users[username]))) {
-                    return showToast('Invalid credentials', 'error');
-                }
-
-                localStorage.setItem('loggedInUser', username);
-                new StockSimulator(username);
-            }
-
-            static async signUp() {
-                const username = $('signUpUsername').value.trim();
-                const password = $('signUpPassword').value.trim();
-                const confirm = $('signUpConfirmPassword').value.trim();
-                if (!username || !password || !confirm) return showToast('All fields required', 'error');
-                if (password !== confirm) return showToast('Passwords do not match', 'error');
-
-                const users = JSON.parse(localStorage.getItem('users') || '{}');
-                if (users[username]) return showToast('Username taken', 'error');
-
-                users[username] = await bcrypt.hash(password, 10);
-                localStorage.setItem('users', JSON.stringify(users));
-                localStorage.setItem('loggedInUser', username);
-                new StockSimulator(username);
-            }
         }
 
         // Start App
@@ -1111,7 +1113,7 @@
             if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
                 showToast('Warning: Use HTTPS for security', 'warning');
             }
-            Auth.init();
+            new StockSimulator();
         });
     </script>
 </body>
