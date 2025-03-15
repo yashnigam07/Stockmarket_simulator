@@ -3,207 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Market Simulator 2025 - Live by Yash Nigam</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png">
+    <title>Quantum Stock Trader 2025</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* [CSS remains unchanged from previous response] */
         :root {
-            --primary: #8a00ff;
-            --secondary: #00ffdd;
-            --bg-dark: #0f0f1a;
-            --card-bg: #1a1a2e;
-            --text-light: #e6e6ff;
-            --success: #00ff88;
-            --danger: #ff3366;
-            --accent: #ffd700;
-            --neutral: #aaaaaa;
+            --bg-primary: #0d0d1a;
+            --bg-secondary: #1a1a2e;
+            --text-primary: #e0e0f5;
+            --accent-purple: #9b59b6;
+            --accent-cyan: #00e5ff;
+            --accent-orange: #ff8c00;
+            --success: #00e676;
+            --danger: #ff5252;
+            --neutral: #7a8299;
+            --shadow: rgba(0, 0, 0, 0.5);
+            --glow: 0 0 10px var(--accent-cyan);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body.light-theme {
+            --bg-primary: #f0f4f8;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a2e;
+            --accent-purple: #6b48ff;
+            --accent-cyan: #00b7eb;
+            --neutral: #4a4a4a;
+        }
+
+        body.minimal-theme {
+            --bg-primary: #e0e0e0;
+            --bg-secondary: #ffffff;
+            --text-primary: #333333;
+            --accent-purple: #555555;
+            --accent-cyan: #777777;
+            --accent-orange: #999999;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark), #141428);
-            color: var(--text-light);
+            font-family: 'Roboto Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
             min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: 0.1; }
-
+        /* Header */
         header {
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1.2rem 2rem;
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 2px 15px var(--shadow);
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
         }
 
         header h1 {
-            font-size: 1.8rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent-purple), var(--accent-cyan));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
-        .stock-switcher select, .theme-toggle, .logout-btn {
-            background: rgba(51, 51, 51, 0.8);
-            color: var(--text-light);
-            border: 1px solid var(--primary);
-            padding: 0.6rem 1rem;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-controls select, .header-controls button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent-purple);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-primary);
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .stock-switcher select:hover, .theme-toggle:hover, .logout-btn:hover {
-            border-color: var(--secondary);
-            box-shadow: 0 0 10px rgba(0, 255, 221, 0.3);
+        .header-controls select:hover, .header-controls button:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow);
         }
 
-        .container {
+        #clock {
+            font-size: 0.9rem;
+            color: var(--neutral);
+        }
+
+        /* Main Layout */
+        .simulator-grid {
             max-width: 1600px;
             margin: 2rem auto;
-            padding: 0 1.5rem;
+            padding: 0 1rem;
             display: grid;
-            grid-template-columns: 3fr 1fr;
-            gap: 2rem;
+            grid-template-columns: 3fr 2fr 1fr;
+            gap: 1.5rem;
+            flex-grow: 1;
         }
 
+        /* Card Styling */
         .card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(138, 0, 255, 0.1) 0%, transparent 70%);
-            transform: rotate(30deg);
-            pointer-events: none;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            transition: all 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 6px 25px var(--shadow);
         }
 
+        .card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .card.collapsed > *:not(h2) { display: none; }
+
+        /* Price Display */
         .price-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            justify-content: center;
-            text-shadow: 0 0 10px rgba(0, 255, 221, 0.3);
+            margin-bottom: 1rem;
         }
 
-        .price-trend, .live-status {
-            font-size: 1.1rem;
+        .price-trend, .live-indicator {
+            font-size: 1rem;
             padding: 0.4rem 0.8rem;
             border-radius: 20px;
-            font-weight: 500;
         }
 
-        .price-up { background: rgba(0, 255, 136, 0.2); color: var(--success); }
-        .price-down { background: rgba(255, 51, 102, 0.2); color: var(--danger); }
-        .live { background: rgba(0, 255, 136, 0.2); color: var(--success); }
-        .offline { background: rgba(255, 51, 102, 0.2); color: var(--danger); }
+        .trend-up { background: rgba(0, 230, 118, 0.2); color: var(--success); }
+        .trend-down { background: rgba(255, 82, 82, 0.2); color: var(--danger); }
+        .live { background: rgba(0, 230, 118, 0.2); color: var(--success); }
+        .offline { background: rgba(255, 82, 82, 0.2); color: var(--danger); }
 
-        .portfolio-card summary, .history-card summary, .social-card summary, .education-card summary {
-            font-size: 1.4rem;
-            padding: 0.6rem 0;
-            cursor: pointer;
-            outline: none;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .portfolio-item, .history-item, .social-item {
+        /* Chart Controls */
+        .chart-controls {
             display: flex;
-            justify-content: space-between;
-            padding: 0.8rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
+            gap: 1rem;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
         }
 
-        .portfolio-item:hover, .history-item:hover, .social-item:hover {
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .action-bar {
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
-            position: sticky;
-            bottom: 0;
-            box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.4);
-            z-index: 999;
-        }
-
-        .action-controls {
+        .chart-controls label {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
-            max-width: 600px;
-            margin: 0 auto;
+            gap: 0.5rem;
         }
 
-        .quantity-input, .order-type, .limit-price-input {
-            padding: 0.8rem;
-            width: 100px;
-            background: rgba(51, 51, 51, 0.8);
-            border: 1px solid var(--primary);
-            color: var(--text-light);
+        /* Trading Panel */
+        .trading-panel {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
             border-radius: 12px;
-            text-align: center;
-            font-size: 1rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            bottom: 1rem;
+            margin: 1rem auto;
+            max-width: 1000px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .trading-panel input, .trading-panel select {
+            padding: 0.75rem;
+            border: 1px solid var(--accent-purple);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            width: 120px;
             transition: all 0.3s ease;
         }
 
-        .quantity-input:focus, .order-type:focus, .limit-price-input:focus {
-            border-color: var(--secondary);
-            box-shadow: 0 0 12px rgba(0, 255, 221, 0.4);
+        .trading-panel input:focus, .trading-panel select:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow);
             outline: none;
         }
 
+        /* Improved Button Styling */
         .btn {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: var(--text-light);
+            padding: 0.75rem 1.5rem;
             border: none;
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1.1rem;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            color: var(--text-primary);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 10px var(--shadow);
         }
 
         .btn::before {
@@ -213,684 +228,890 @@
             left: 50%;
             width: 0;
             height: 0;
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            transition: width 0.8s ease, height 0.8s ease;
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:hover::before {
+            width: 200%;
+            height: 200%;
         }
 
         .btn:hover {
-            transform: scale(1.05) translateY(-3px);
-            box-shadow: 0 10px 30px rgba(138, 0, 255, 0.5);
-            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--glow);
         }
 
-        .btn:active::before {
-            width: 400%;
-            height: 400%;
-        }
+        .btn-buy { background: linear-gradient(135deg, var(--success), #00c853); }
+        .btn-sell { background: linear-gradient(135deg, var(--danger), #d81b60); }
+        .btn span { display: flex; align-items: center; gap: 0.5rem; }
 
-        .btn span { position: relative; z-index: 1; display: flex; align-items: center; gap: 0.5rem; }
-
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-
-        .btn.loading::after {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border: 2px solid var(--text-light);
-            border-top: 2px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            z-index: 1;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .btn.buy { background: linear-gradient(45deg, #00cc66, var(--secondary)); }
-        .btn.buy:hover { background: linear-gradient(45deg, var(--secondary), #00cc66); }
-        .btn.sell { background: linear-gradient(45deg, #ff3366, var(--primary)); }
-        .btn.sell:hover { background: linear-gradient(45deg, var(--primary), #ff3366); }
-
+        /* Toast */
         .toast {
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(10px);
-            border-left: 5px solid var(--secondary);
-            padding: 1.2rem 2rem;
-            border-radius: 0 12px 12px 0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transform: translateX(120%);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-cyan);
+            box-shadow: 0 4px 15px var(--shadow);
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .toast.show { transform: translateX(0); }
         .toast.success { border-left-color: var(--success); }
         .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--accent-orange); }
 
-        .history-card, .social-card { max-height: 300px; overflow-y: auto; }
-        .history-item, .social-item { font-size: 0.9rem; }
-
-        .education-card { padding: 1rem; font-size: 0.9rem; line-height: 1.8; }
-        .education-card ul { list-style: none; padding-left: 1rem; }
-        .education-card li::before { content: "→ "; color: var(--secondary); }
-
+        /* Auth Page */
         .auth-container {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 2rem;
+            padding: 1rem;
         }
 
         .auth-card {
-            background: var(--card-bg);
-            border-radius: 15px;
+            background: var(--bg-secondary);
             padding: 2rem;
+            border-radius: 12px;
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            box-shadow: 0 6px 25px var(--shadow);
             text-align: center;
         }
 
         .auth-card h2 {
             font-size: 2rem;
+            color: var(--accent-cyan);
             margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
         }
 
         .auth-card input {
             width: 100%;
-            padding: 0.8rem;
+            padding: 0.75rem;
             margin-bottom: 1rem;
-            background: rgba(51, 51, 51, 0.8);
-            border: 1px solid var(--primary);
-            color: var(--text-light);
-            border-radius: 12px;
-            font-size: 1rem;
+            border: 1px solid var(--accent-purple);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             transition: all 0.3s ease;
         }
 
         .auth-card input:focus {
-            border-color: var(--secondary);
-            box-shadow: 0 0 12px rgba(0, 255, 221, 0.4);
+            border-color: var(--accent-cyan);
+            box-shadow: var(--glow);
             outline: none;
         }
 
         .auth-toggle {
-            color: var(--secondary);
+            color: var(--accent-orange);
             cursor: pointer;
-            margin-top: 1rem;
-            display: inline-block;
-            transition: all 0.3s ease;
+            transition: color 0.3s ease;
         }
 
-        .auth-toggle:hover { color: var(--accent); text-decoration: underline; }
+        .auth-toggle:hover { color: var(--accent-cyan); }
 
-        @media (max-width: 1024px) { .container { grid-template-columns: 1fr; } .action-controls { flex-wrap: wrap; } }
-        @media (max-width: 768px) { .price-display { font-size: 2rem; } .btn { padding: 0.8rem 2rem; } header { flex-direction: column; gap: 1rem; } }
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            text-align: center;
+            color: var(--neutral);
+            font-size: 0.9rem;
+            box-shadow: 0 -2px 15px var(--shadow);
+            margin-top: auto;
+        }
 
-        body.light-theme { --bg-dark: #f0f0f5; --card-bg: #ffffff; --text-light: #333333; --neutral: #666666; }
+        /* Collapsible Lists */
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--neutral);
+            font-size: 0.9rem;
+        }
+
+        #tradeLog {
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .simulator-grid { grid-template-columns: 2fr 1fr; }
+            .card:nth-child(3) { grid-column: span 2; }
+        }
+
+        @media (max-width: 800px) {
+            .simulator-grid { grid-template-columns: 1fr; }
+            .trading-panel { flex-direction: column; align-items: center; }
+            .trading-panel input, .trading-panel select { width: 100%; }
+            .price-display { font-size: 2rem; }
+            .header-controls { flex-direction: column; gap: 0.5rem; }
+            .chart-controls { flex-direction: column; }
+        }
+
         .hidden { display: none; }
     </style>
 </head>
 <body>
-    <!-- Authentication -->
+    <!-- Auth Page -->
     <div class="auth-container" id="authPage">
         <div class="auth-card" id="loginCard">
             <h2>Login</h2>
-            <input type="text" id="loginUsername" placeholder="Username" required>
-            <input type="password" id="loginPassword" placeholder="Password" required>
-            <button class="btn" id="loginBtn"><span><i class="fas fa-sign-in-alt"></i> Login</span></button>
-            <span class="auth-toggle" id="toggleToSignUp">Need an account? Sign Up</span>
+            <input type="text" id="loginUsername" placeholder="Username" required aria-label="Username">
+            <input type="password" id="loginPassword" placeholder="Password" required aria-label="Password">
+            <button class="btn btn-buy" id="loginBtn"><span><i class="fas fa-sign-in-alt"></i> Login</span></button>
+            <p class="auth-toggle" id="toggleToSignUp">New User? Sign Up</p>
         </div>
         <div class="auth-card hidden" id="signUpCard">
             <h2>Sign Up</h2>
-            <input type="text" id="signUpUsername" placeholder="Username" required>
-            <input type="password" id="signUpPassword" placeholder="Password" required>
-            <input type="password" id="signUpConfirmPassword" placeholder="Confirm Password" required>
-            <button class="btn" id="signUpBtn"><span><i class="fas fa-user-plus"></i> Sign Up</span></button>
-            <span class="auth-toggle" id="toggleToLogin">Already have an account? Login</span>
+            <input type="text" id="signUpUsername" placeholder="Username" required aria-label="Username">
+            <input type="password" id="signUpPassword" placeholder="Password" required aria-label="Password">
+            <input type="password" id="signUpConfirmPassword" placeholder="Confirm Password" required aria-label="Confirm Password">
+            <button class="btn btn-buy" id="signUpBtn"><span><i class="fas fa-user-plus"></i> Sign Up</span></button>
+            <p class="auth-toggle" id="toggleToLogin">Have an account? Login</p>
         </div>
     </div>
 
-    <!-- Simulator -->
+    <!-- Simulator Page -->
     <div class="simulator hidden" id="simulatorPage">
-        <canvas class="particles" id="particles"></canvas>
         <header>
-            <h1>Stock Market Simulator 2025</h1>
-            <div class="stock-switcher">
-                <select id="stockSelect">
+            <h1>Quantum Stock Trader 2025</h1>
+            <div class="header-controls">
+                <span id="clock"></span>
+                <select id="stockSelect" aria-label="Select Stock">
                     <option value="AAPL">Apple (AAPL)</option>
                     <option value="GOOGL">Google (GOOGL)</option>
                     <option value="TSLA">Tesla (TSLA)</option>
                     <option value="BTC">Bitcoin (BTC)</option>
                 </select>
-                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
-                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <select id="themeSelect" aria-label="Select Theme">
+                    <option value="cyberpunk">Cyberpunk</option>
+                    <option value="light">Light</option>
+                    <option value="minimal">Minimal</option>
+                </select>
+                <button id="logoutBtn" aria-label="Logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </header>
-        <div class="container">
+
+        <div class="simulator-grid">
             <div class="card chart-card">
                 <div class="price-display">
-                    <span>$</span><span id="price">100</span>
-                    <span id="trend" class="price-trend"></span>
-                    <span id="liveStatus" class="live-status offline">Offline</span>
+                    $<span id="currentPrice">100.00</span>
+                    <span id="priceTrend" class="price-trend"></span>
+                    <span id="liveStatus" class="live-indicator offline">Offline</span>
                 </div>
-                <canvas id="stockChart"></canvas>
+                <div class="chart-controls">
+                    <label><input type="checkbox" id="toggleEMA" checked> EMA(10)</label>
+                    <label><input type="checkbox" id="toggleRSI" checked> RSI</label>
+                    <label><input type="checkbox" id="toggleBB" checked> Bollinger Bands</label>
+                </div>
+                <canvas id="priceChart" aria-label="Stock Price Chart"></canvas>
             </div>
+
             <div class="card portfolio-card">
-                <details open>
-                    <summary>Portfolio Overview</summary>
-                    <div class="portfolio-item"><span>Cash:</span> $<span id="cash">10000</span></div>
-                    <div class="portfolio-item"><span>Stocks Owned:</span> <span id="stocks">0</span></div>
-                    <div class="portfolio-item"><span>Avg. Buy Price:</span> $<span id="avgPrice">0</span></div>
-                    <div class="portfolio-item"><span>Profit/Loss:</span> $<span id="pl">0</span></div>
-                    <div class="portfolio-item"><span>Total Value:</span> $<span id="totalValue">10000</span></div>
-                </details>
+                <h2>Portfolio</h2>
+                <div class="list-item"><span>Cash:</span> $<span id="cash">10000.00</span></div>
+                <div class="list-item"><span>Stocks:</span> <span id="stocks">0</span></div>
+                <div class="list-item"><span>Total Value:</span> $<span id="totalValue">10000.00</span></div>
+                <div class="list-item"><span>Profit/Loss:</span> $<span id="profitLoss">0.00</span></div>
+                <div class="list-item"><span>Volatility:</span> <span id="volatility">0.00%</span></div>
+                <canvas id="performanceChart" aria-label="Portfolio Performance Chart" style="margin-top: 1rem;"></canvas>
+                <h2>Trade Log</h2>
+                <div id="tradeLog"></div>
             </div>
-            <div class="card history-card">
-                <details open>
-                    <summary>Transaction History</summary>
-                    <div id="history"></div>
-                </details>
-            </div>
-            <div class="card social-card">
-                <details open>
-                    <summary>Community Sentiment</summary>
-                    <div class="social-item"><span>Bullish:</span> <span id="bullish">50%</span></div>
-                    <div class="social-item"><span>Bearish:</span> <span id="bearish">50%</span></div>
-                </details>
-            </div>
-            <div class="card education-card">
-                <details open>
-                    <summary>Learn Trading</summary>
-                    <ul>
-                        <li>Buy low, sell high to maximize profits.</li>
-                        <li>Use limit orders to control your entry/exit points.</li>
-                        <li>Monitor market trends with technical indicators.</li>
-                        <li>Diversify your portfolio to reduce risk.</li>
-                    </ul>
-                </details>
+
+            <div class="card analytics-card">
+                <h2>Analytics & Social</h2>
+                <div class="list-item"><span>Sharpe Ratio:</span> <span id="sharpeRatio">0.00</span></div>
+                <div class="list-item"><span>Bullish Sentiment:</span> <span id="bullish">50%</span></div>
+                <div class="list-item"><span>Bearish Sentiment:</span> <span id="bearish">50%</span></div>
+                <button class="btn" id="voteBullish"><span><i class="fas fa-thumbs-up"></i> Bullish</span></button>
+                <button class="btn btn-sell" id="voteBearish"><span><i class="fas fa-thumbs-down"></i> Bearish</span></button>
+                <h2>Leaderboard</h2>
+                <div id="leaderboard"></div>
             </div>
         </div>
-        <div class="action-bar">
-            <div class="action-controls">
-                <input type="number" class="quantity-input" id="quantity" min="1" value="1" placeholder="Qty">
-                <select class="order-type" id="orderType">
-                    <option value="market">Market</option>
-                    <option value="limit">Limit</option>
-                </select>
-                <input type="number" class="limit-price-input hidden" id="limitPrice" step="0.01" placeholder="Limit Price">
-                <button class="btn buy" id="buyBtn"><span><i class="fas fa-arrow-up"></i> Buy</span></button>
-                <button class="btn sell" id="sellBtn"><span><i class="fas fa-arrow-down"></i> Sell</span></button>
-            </div>
+
+        <div class="trading-panel">
+            <input type="number" id="quantity" min="1" value="1" placeholder="Quantity" aria-label="Quantity">
+            <select id="orderType" aria-label="Order Type">
+                <option value="market">Market</option>
+                <option value="limit">Limit</option>
+                <option value="stop-loss">Stop-Loss</option>
+                <option value="take-profit">Take-Profit</option>
+                <option value="short">Short Sell</option>
+            </select>
+            <input type="number" id="limitPrice" class="hidden" placeholder="Limit Price" step="0.01" aria-label="Limit Price">
+            <input type="number" id="stopLossPrice" class="hidden" placeholder="Stop-Loss" step="0.01" aria-label="Stop-Loss Price">
+            <input type="number" id="takeProfitPrice" class="hidden" placeholder="Take-Profit" step="0.01" aria-label="Take-Profit Price">
+            <input type="number" id="leverage" class="hidden" min="1" max="10" value="1" placeholder="Leverage" aria-label="Leverage">
+            <button class="btn btn-buy" id="buyBtn"><span><i class="fas fa-arrow-up"></i> Buy</span></button>
+            <button class="btn btn-sell" id="sellBtn"><span><i class="fas fa-arrow-down"></i> Sell</span></button>
+            <button class="btn" id="exportBtn"><span><i class="fas fa-download"></i> Export</span></button>
+            <input type="file" id="importInput" accept=".json" class="hidden" aria-label="Import Portfolio">
+            <button class="btn" id="importBtn"><span><i class="fas fa-upload"></i> Import</span></button>
         </div>
-        <div id="toast" class="toast"><i class="fas fa-info-circle"></i> <span id="toastMsg"></span></div>
-        <footer style="text-align: center; padding: 1rem; font-size: 0.8rem; color: var(--neutral);">
-            © 2025 Yash Nigam (yashnigam07). All rights reserved.
+
+        <div class="toast" id="toast" role="alert" aria-live="assertive">
+            <i class="fas fa-info-circle"></i> <span id="toastMessage"></span>
+        </div>
+
+        <footer>
+            © 2025 Quantum Stock Trader by yashnigam07. All rights reserved.
         </footer>
     </div>
 
-    <script src="config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+    <script src="config.js"></script>
     <script>
-        // Secure password hashing using SHA-256 (requires HTTPS in production)
-        async function hashPassword(password) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(password);
-            const hash = await crypto.subtle.digest('SHA-256', data);
-            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-        }
+        // Utility Functions
+        const $ = (id) => document.getElementById(id);
+        const showToast = (message, type = 'info') => {
+            const toast = $('toast');
+            $('toastMessage').textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        };
 
+        const notify = (title, body) => {
+            if (Notification.permission === 'granted') new Notification(title, { body });
+            else if (Notification.permission !== 'denied') Notification.requestPermission().then(p => p === 'granted' && new Notification(title, { body }));
+        };
+
+        const formatDateTime = () => {
+            const now = new Date('2025-03-15T00:00:00'); // Base date from your context
+            now.setSeconds(now.getSeconds() + Math.floor(performance.now() / 1000)); // Simulate progression
+            return now.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+        };
+
+        // Simulator Class
         class StockSimulator {
             constructor(username) {
                 this.username = username;
                 this.cash = 10000;
-                this.stocks = 0;
-                this.price = 100;
-                this.priceHistory = [100];
-                this.totalSpent = 0;
-                this.lastPrice = 100;
-                this.transactions = [];
-                this.sentiment = { bullish: 50, bearish: 50 };
+                this.portfolio = {};
                 this.currentStock = 'AAPL';
-                this.apiKey = config.apiKey; // Load API key from config.js
+                this.stockPrices = { AAPL: 100, GOOGL: 100, TSLA: 100, BTC: 100 };
+                this.price = 100;
+                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: 100 }];
+                this.lastPrice = 100;
+                this.limitOrders = [];
+                this.stopLossOrders = [];
+                this.takeProfitOrders = [];
+                this.shortPositions = [];
+                this.sentiment = { bullish: 50, bearish: 50, votes: { bullish: 0, bearish: 0 } };
+                this.leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '{}');
                 this.isLive = false;
                 this.apiCalls = 0;
-                this.maxApiCalls = 5; // Alpha Vantage free tier limit per minute
-
-                this.elements = {
-                    price: document.getElementById('price'),
-                    trend: document.getElementById('trend'),
-                    cash: document.getElementById('cash'),
-                    stocks: document.getElementById('stocks'),
-                    pl: document.getElementById('pl'),
-                    avgPrice: document.getElementById('avgPrice'),
-                    totalValue: document.getElementById('totalValue'),
-                    quantity: document.getElementById('quantity'),
-                    orderType: document.getElementById('orderType'),
-                    limitPrice: document.getElementById('limitPrice'),
-                    toast: document.getElementById('toast'),
-                    toastMsg: document.getElementById('toastMsg'),
-                    history: document.getElementById('history'),
-                    bullish: document.getElementById('bullish'),
-                    bearish: document.getElementById('bearish'),
-                    liveStatus: document.getElementById('liveStatus')
-                };
-
+                this.maxApiCalls = 5;
+                this.performanceHistory = [{ time: new Date().toLocaleTimeString(), value: 10000 }];
+                this.tradeLog = [];
+                this.apiKey = config.apiKey;
                 this.init();
             }
 
             async init() {
-                try {
-                    this.initChart();
-                    this.initParticles();
-                    this.bindEvents();
-                    this.loadFromLocalStorage();
-                    this.startSimulation();
-                } catch (error) {
-                    console.error('Initialization error:', error);
-                    this.showToast('Failed to initialize simulator', 'error');
-                }
+                if (!this.apiKey) throw new Error('API key not found in config.js');
+                this.setupUI();
+                this.setupCharts();
+                this.loadData();
+                this.startSimulation();
+                Notification.requestPermission();
+                this.applyTheme();
+                this.toggleCollapsibleCards();
+                this.updateClock();
             }
 
-            initChart() {
-                const ctx = document.getElementById('stockChart').getContext('2d');
-                this.stockChart = new Chart(ctx, {
+            setupUI() {
+                $('simulatorPage').classList.remove('hidden');
+                $('authPage').classList.add('hidden');
+                $('stockSelect').value = this.currentStock;
+
+                $('buyBtn').addEventListener('click', () => this.handleBuy());
+                $('sellBtn').addEventListener('click', () => this.handleSell());
+                $('stockSelect').addEventListener('change', () => this.changeStock());
+                $('themeSelect').addEventListener('change', () => this.changeTheme());
+                $('logoutBtn').addEventListener('click', () => this.logout());
+                $('orderType').addEventListener('change', () => this.toggleOrderInputs());
+                $('voteBullish').addEventListener('click', () => this.vote('bullish'));
+                $('voteBearish').addEventListener('click', () => this.vote('bearish'));
+                $('exportBtn').addEventListener('click', () => this.exportData());
+                $('importBtn').addEventListener('click', () => $('importInput').click());
+                $('importInput').addEventListener('change', (e) => this.importData(e));
+
+                // Chart toggles
+                $('toggleEMA').addEventListener('change', () => {
+                    this.priceChart.data.datasets[1].hidden = !$('toggleEMA').checked;
+                    this.priceChart.update();
+                });
+                $('toggleRSI').addEventListener('change', () => {
+                    this.priceChart.data.datasets[2].hidden = !$('toggleRSI').checked;
+                    this.priceChart.update();
+                });
+                $('toggleBB').addEventListener('change', () => {
+                    this.priceChart.data.datasets[3].hidden = !$('toggleBB').checked;
+                    this.priceChart.data.datasets[4].hidden = !$('toggleBB').checked;
+                    this.priceChart.update();
+                });
+            }
+
+            toggleOrderInputs() {
+                const type = $('orderType').value;
+                $('limitPrice').classList.toggle('hidden', type !== 'limit');
+                $('stopLossPrice').classList.toggle('hidden', type !== 'stop-loss');
+                $('takeProfitPrice').classList.toggle('hidden', type !== 'take-profit');
+                $('leverage').classList.toggle('hidden', type !== 'short');
+            }
+
+            toggleCollapsibleCards() {
+                document.querySelectorAll('.card h2').forEach(h2 => {
+                    h2.addEventListener('click', () => h2.parentElement.classList.toggle('collapsed'));
+                });
+            }
+
+            setupCharts() {
+                this.priceChart = new Chart($('priceChart'), {
                     type: 'line',
                     data: {
-                        labels: Array(this.priceHistory.length).fill(''),
-                        datasets: [{
-                            label: 'Stock Price',
-                            data: this.priceHistory,
-                            borderColor: 'rgb(0, 255, 221)',
-                            backgroundColor: this.createGradient(ctx),
-                            fill: true,
-                            tension: 0.5,
-                            pointRadius: 0,
-                            pointHoverRadius: 6
-                        }]
+                        labels: this.priceHistory.map(h => h.time),
+                        datasets: [
+                            { label: 'Price', data: this.priceHistory.map(h => h.price), borderColor: 'var(--accent-cyan)', fill: true, backgroundColor: 'rgba(0, 229, 255, 0.1)', tension: 0.3 },
+                            { label: 'EMA(10)', data: this.calculateEMA(10), borderColor: 'var(--accent-orange)', fill: false, tension: 0.3 },
+                            { label: 'RSI', data: this.calculateRSI(14), borderColor: 'var(--accent-purple)', yAxisID: 'rsi', fill: false, tension: 0.3 },
+                            { label: 'Bollinger Upper', data: this.calculateBollingerBands(20).upper, borderColor: '#ffffff', fill: false, tension: 0.3, borderDash: [5, 5] },
+                            { label: 'Bollinger Lower', data: this.calculateBollingerBands(20).lower, borderColor: '#ffffff', fill: false, tension: 0.3, borderDash: [5, 5] }
+                        ]
                     },
                     options: {
                         responsive: true,
-                        scales: { y: { beginAtZero: false, ticks: { callback: value => `$${value.toFixed(2)}` } }, x: { ticks: { maxTicksLimit: 12 } } },
-                        plugins: { legend: { display: false }, tooltip: { enabled: true } }
+                        scales: {
+                            y: { ticks: { callback: v => `$${v.toFixed(2)}` }, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+                            rsi: { position: 'right', min: 0, max: 100, ticks: { color: 'var(--accent-purple)' }, grid: { display: false } },
+                            x: { ticks: { maxTicksLimit: 10 }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+                        },
+                        plugins: {
+                            legend: { position: 'top', labels: { color: 'var(--text-primary)' } },
+                            zoom: {
+                                zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'xy' },
+                                pan: { enabled: true, mode: 'xy' }
+                            }
+                        }
+                    }
+                });
+
+                this.performanceChart = new Chart($('performanceChart'), {
+                    type: 'line',
+                    data: {
+                        labels: this.performanceHistory.map(h => h.time),
+                        datasets: [{ label: 'Portfolio Value', data: this.performanceHistory.map(h => h.value), borderColor: 'var(--accent-orange)', fill: true, backgroundColor: 'rgba(255, 140, 0, 0.1)' }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: { y: { ticks: { callback: v => `$${v.toFixed(2)}` } }, x: { ticks: { maxTicksLimit: 10 } } },
+                        plugins: { legend: { display: false } }
                     }
                 });
             }
 
-            createGradient(ctx) {
-                const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-                gradient.addColorStop(0, 'rgba(0, 255, 221, 0.25)');
-                gradient.addColorStop(1, 'rgba(0, 255, 221, 0)');
-                return gradient;
+            calculateEMA(period) {
+                const prices = this.priceHistory.map(h => h.price);
+                const k = 2 / (period + 1);
+                const ema = [prices[0]];
+                for (let i = 1; i < prices.length; i++) {
+                    ema.push(prices[i] * k + ema[i - 1] * (1 - k));
+                }
+                return ema;
             }
 
-            initParticles() {
-                const canvas = document.getElementById('particles');
-                const ctx = canvas.getContext('2d');
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-
-                const particles = Array.from({ length: 50 }, () => ({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    radius: Math.random() * 2 + 1,
-                    speed: Math.random() * 0.5 + 0.1
-                }));
-
-                let animationFrame;
-                const animate = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = 'rgba(138, 0, 255, 0.5)';
-                    particles.forEach(p => {
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                        ctx.fill();
-                        p.y -= p.speed;
-                        if (p.y < 0) p.y = canvas.height;
-                    });
-                    animationFrame = requestAnimationFrame(animate);
-                };
-                animate();
-
-                document.addEventListener('visibilitychange', () => {
-                    if (document.hidden) cancelAnimationFrame(animationFrame);
-                    else animate();
-                });
+            calculateRSI(period) {
+                const prices = this.priceHistory.map(h => h.price);
+                if (prices.length < period + 1) return prices.map(() => null);
+                const gains = [], losses = [];
+                for (let i = 1; i < prices.length; i++) {
+                    const diff = prices[i] - prices[i - 1];
+                    gains.push(diff > 0 ? diff : 0);
+                    losses.push(diff < 0 ? -diff : 0);
+                }
+                let avgGain = gains.slice(0, period).reduce((a, b) => a + b, 0) / period;
+                let avgLoss = losses.slice(0, period).reduce((a, b) => a + b, 0) / period;
+                const rs = avgGain / avgLoss;
+                const rsi = [null, ...Array(period - 1).fill(null), 100 - (100 / (1 + rs))];
+                for (let i = period; i < gains.length; i++) {
+                    avgGain = (avgGain * (period - 1) + gains[i]) / period;
+                    avgLoss = (avgLoss * (period - 1) + losses[i]) / period;
+                    rsi.push(100 - (100 / (1 + avgGain / avgLoss)));
+                }
+                return rsi;
             }
 
-            bindEvents() {
-                document.getElementById('buyBtn').addEventListener('click', () => this.buyStock());
-                document.getElementById('sellBtn').addEventListener('click', () => this.sellStock());
-                document.getElementById('stockSelect').addEventListener('change', () => this.changeStock());
-                document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
-                document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
-                this.elements.orderType.addEventListener('change', () => {
-                    this.elements.limitPrice.classList.toggle('hidden', this.elements.orderType.value !== 'limit');
-                });
+            calculateBollingerBands(period) {
+                const prices = this.priceHistory.map(h => h.price);
+                const sma = prices.map((_, i) => i < period - 1 ? null : prices.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0) / period);
+                const upper = [], lower = [];
+                for (let i = 0; i < prices.length; i++) {
+                    if (i < period - 1) {
+                        upper.push(null);
+                        lower.push(null);
+                    } else {
+                        const slice = prices.slice(i - period + 1, i + 1);
+                        const mean = sma[i];
+                        const stdDev = Math.sqrt(slice.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / period);
+                        upper.push(mean + 2 * stdDev);
+                        lower.push(mean - 2 * stdDev);
+                    }
+                }
+                return { upper, lower };
             }
 
             startSimulation() {
-                this.updatePriceUI();
-                setInterval(() => this.fetchLivePrice(), 12000); // Adjusted for Alpha Vantage rate limit
+                setInterval(() => this.updatePrice(), 15000);
+                setInterval(() => this.simulateDarkPool(), 30000);
+                setInterval(() => this.updateClock(), 1000);
+                this.updateUI();
             }
 
-            async fetchLivePrice() {
-                if (this.apiCalls >= this.maxApiCalls) {
-                    this.simulatePrice();
-                    return;
-                }
+            updateClock() {
+                $('clock').textContent = formatDateTime();
+            }
 
-                const symbol = this.currentStock === 'BTC' ? 'BTCUSD' : this.currentStock;
-                const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${this.apiKey}`;
-
-                try {
-                    this.apiCalls++;
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    const quote = data['Global Quote'];
-                    if (!quote || !quote['05. price']) throw new Error('Invalid API response');
-                    this.lastPrice = this.price;
-                    this.price = parseFloat(quote['05. price']);
-                    this.isLive = true;
-                    this.elements.liveStatus.textContent = 'Live';
-                    this.elements.liveStatus.className = 'live-status live';
-                    this.updatePriceUI();
-                } catch (error) {
-                    console.error('Live price fetch failed:', error);
-                    this.showToast('Failed to fetch live data. Using simulation.', 'error');
+            async updatePrice() {
+                if (this.apiCalls < this.maxApiCalls) {
+                    try {
+                        const symbol = this.currentStock === 'BTC' ? 'BTCUSD' : this.currentStock;
+                        const res = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${this.apiKey}`);
+                        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+                        const data = await res.json();
+                        if (data['Global Quote'] && data['Global Quote']['05. price']) {
+                            this.lastPrice = this.price;
+                            this.price = parseFloat(data['Global Quote']['05. price']);
+                            this.stockPrices[this.currentStock] = this.price;
+                            this.isLive = true;
+                            this.apiCalls++;
+                            showToast(`Live price updated for ${this.currentStock}`, 'success');
+                        } else {
+                            throw new Error('Invalid API response: No price data');
+                        }
+                    } catch (e) {
+                        console.error('API fetch failed:', e);
+                        this.simulatePrice();
+                        showToast(`Failed to fetch live data: ${e.message}. Using simulation`, 'warning');
+                    }
+                } else {
                     this.simulatePrice();
+                    showToast('API rate limit reached, using simulation', 'warning');
                 }
+                this.updateUI();
             }
 
             simulatePrice() {
                 this.lastPrice = this.price;
-                const volatility = this.currentStock === 'BTC' ? 50 : 15;
-                this.price += (Math.random() - 0.5) * volatility;
-                this.price = Math.max(10, Math.round(this.price * 100) / 100);
+                const volatility = this.currentStock === 'BTC' ? 0.05 : 0.02;
+                this.price *= (1 + (Math.random() - 0.5) * volatility);
+                this.price = Math.max(10, this.price.toFixed(2));
+                this.stockPrices[this.currentStock] = this.price;
                 this.isLive = false;
-                this.elements.liveStatus.textContent = 'Offline';
-                this.elements.liveStatus.className = 'live-status offline';
-                this.updatePriceUI();
             }
 
-            updatePriceUI() {
-                this.elements.price.textContent = this.price.toFixed(2);
+            simulateDarkPool() {
+                const impact = (Math.random() - 0.5) * 0.03;
+                this.price *= (1 + impact);
+                showToast(`Dark pool trade: ${impact > 0 ? 'Buy' : 'Sell'} pressure`, impact > 0 ? 'success' : 'error');
+                this.updateUI();
+            }
+
+            updateUI() {
+                $('currentPrice').textContent = this.price.toFixed(2);
                 const change = ((this.price - this.lastPrice) / this.lastPrice * 100).toFixed(2);
-                this.elements.trend.textContent = `${this.price > this.lastPrice ? '+' : ''}${change}%`;
-                this.elements.trend.className = `price-trend ${this.price > this.lastPrice ? 'price-up' : 'price-down'}`;
-                this.priceHistory.push(this.price);
+                $('priceTrend').textContent = `${change > 0 ? '+' : ''}${change}%`;
+                $('priceTrend').className = `price-trend ${change >= 0 ? 'trend-up' : 'trend-down'}`;
+                $('liveStatus').textContent = this.isLive ? 'Live' : 'Offline';
+                $('liveStatus').className = `live-indicator ${this.isLive ? 'live' : 'offline'}`;
+
+                this.priceHistory.push({ time: new Date().toLocaleTimeString(), price: this.price });
                 if (this.priceHistory.length > 60) this.priceHistory.shift();
-                this.stockChart.data.labels = Array(this.priceHistory.length).fill('');
-                this.stockChart.data.datasets[0].data = this.priceHistory;
-                this.stockChart.update();
-                this.updatePortfolio();
-                this.updateSentiment();
+                this.priceChart.data.labels = this.priceHistory.map(h => h.time);
+                this.priceChart.data.datasets[0].data = this.priceHistory.map(h => h.price);
+                this.priceChart.data.datasets[1].data = this.calculateEMA(10);
+                this.priceChart.data.datasets[2].data = this.calculateRSI(14);
+                const bb = this.calculateBollingerBands(20);
+                this.priceChart.data.datasets[3].data = bb.upper;
+                this.priceChart.data.datasets[4].data = bb.lower;
+                this.priceChart.update();
+
+                const totalStocks = this.portfolio[this.currentStock]?.qty || 0;
+                const stockValue = totalStocks * this.price;
+                const totalValue = this.cash + stockValue + this.calculateShortValue();
+                const profitLoss = stockValue - (this.portfolio[this.currentStock]?.totalSpent || 0);
+
+                $('cash').textContent = this.cash.toFixed(2);
+                $('stocks').textContent = totalStocks;
+                $('totalValue').textContent = totalValue.toFixed(2);
+                $('profitLoss').textContent = profitLoss.toFixed(2);
+                $('profitLoss').style.color = profitLoss >= 0 ? 'var(--success)' : 'var(--danger)';
+                this.calculateVolatility();
+                this.updatePerformance(totalValue);
+                this.updateAnalytics();
+                this.updateLeaderboard();
+                this.updateTradeLog();
+                this.checkOrders();
             }
 
-            buyStock() {
-                const qty = parseInt(this.elements.quantity.value);
-                const orderType = this.elements.orderType.value;
-                const limitPrice = orderType === 'limit' ? parseFloat(this.elements.limitPrice.value) : this.price;
-                const cost = limitPrice * qty;
-                const buyBtn = document.getElementById('buyBtn');
+            calculateVolatility() {
+                const prices = this.priceHistory.map(h => h.price);
+                if (prices.length < 2) return $('volatility').textContent = '0.00%';
+                const returns = prices.slice(1).map((p, i) => (p - prices[i]) / prices[i]);
+                const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
+                const variance = returns.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / returns.length;
+                const vol = (Math.sqrt(variance) * Math.sqrt(252) * 100).toFixed(2);
+                $('volatility').textContent = `${vol}%`;
+            }
+
+            calculateSharpeRatio() {
+                const returns = this.performanceHistory.map((h, i) => i === 0 ? 0 : (h.value - this.performanceHistory[i - 1].value) / this.performanceHistory[i - 1].value);
+                if (returns.length < 2) return 0;
+                const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
+                const stdDev = Math.sqrt(returns.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / returns.length);
+                return stdDev === 0 ? 0 : (mean / stdDev * Math.sqrt(252)).toFixed(2);
+            }
+
+            updatePerformance(totalValue) {
+                this.performanceHistory.push({ time: new Date().toLocaleTimeString(), value: totalValue });
+                if (this.performanceHistory.length > 60) this.performanceHistory.shift();
+                this.performanceChart.data.labels = this.performanceHistory.map(h => h.time);
+                this.performanceChart.data.datasets[0].data = this.performanceHistory.map(h => h.value);
+                this.performanceChart.update();
+            }
+
+            updateAnalytics() {
+                $('sharpeRatio').textContent = this.calculateSharpeRatio();
+                const totalVotes = this.sentiment.votes.bullish + this.sentiment.votes.bearish;
+                $('bullish').textContent = totalVotes ? `${(this.sentiment.votes.bullish / totalVotes * 100).toFixed(0)}%` : '50%';
+                $('bearish').textContent = totalVotes ? `${(this.sentiment.votes.bearish / totalVotes * 100).toFixed(0)}%` : '50%';
+            }
+
+            updateLeaderboard() {
+                const totalValue = this.cash + Object.entries(this.portfolio).reduce((sum, [s, d]) => sum + d.qty * (this.stockPrices[s] || 100), 0);
+                this.leaderboard[this.username] = totalValue;
+                localStorage.setItem('leaderboard', JSON.stringify(this.leaderboard));
+                const sorted = Object.entries(this.leaderboard).sort((a, b) => b[1] - a[1]).slice(0, 5);
+                $('leaderboard').innerHTML = sorted.map(([user, val]) => `<div class="list-item"><span>${user}</span><span>$${val.toFixed(2)}</span></div>`).join('');
+            }
+
+            updateTradeLog() {
+                $('tradeLog').innerHTML = this.tradeLog.slice(-5).map(t => 
+                    `<div class="list-item"><span>${t.type} ${t.qty} ${t.stock}</span><span>$${t.price.toFixed(2)} @ ${t.time}</span></div>`
+                ).join('');
+            }
+
+            handleBuy() {
+                const qty = parseInt($('quantity').value);
+                const type = $('orderType').value;
+                const price = type === 'limit' ? parseFloat($('limitPrice').value) : type === 'stop-loss' ? parseFloat($('stopLossPrice').value) : type === 'take-profit' ? parseFloat($('takeProfitPrice').value) : this.price;
+                const leverage = type === 'short' ? parseInt($('leverage').value) : 1;
+                const cost = qty * price;
 
                 if (!this.validateOrder(qty, cost, 'buy')) return;
 
-                buyBtn.classList.add('loading');
-                buyBtn.disabled = true;
-
-                if (orderType === 'limit' && this.price > limitPrice) {
-                    this.showToast(`Waiting for price to drop to $${limitPrice.toFixed(2)}`, 'info');
-                    setTimeout(() => buyBtn.classList.remove('loading') && (buyBtn.disabled = false), 1000);
-                    return;
+                if (type === 'limit' && this.price > price) {
+                    this.limitOrders.push({ type: 'buy', qty, price });
+                    showToast(`Limit buy placed at $${price.toFixed(2)}`, 'info');
+                } else if (type === 'stop-loss') {
+                    this.stopLossOrders.push({ qty, price });
+                    showToast(`Stop-loss set at $${price.toFixed(2)}`, 'info');
+                } else if (type === 'take-profit') {
+                    this.takeProfitOrders.push({ qty, price });
+                    showToast(`Take-profit set at $${price.toFixed(2)}`, 'info');
+                } else if (type === 'short') {
+                    this.shortPositions.push({ qty, entryPrice: this.price, leverage, margin: cost / leverage });
+                    this.cash -= cost / leverage;
+                    showToast(`Short position opened: ${qty} ${this.currentStock} @ ${leverage}x`, 'info');
+                    this.tradeLog.push({ type: 'Short', qty, stock: this.currentStock, price, time: new Date().toLocaleTimeString() });
+                } else {
+                    this.cash -= cost;
+                    this.portfolio[this.currentStock] = this.portfolio[this.currentStock] || { qty: 0, totalSpent: 0 };
+                    this.portfolio[this.currentStock].qty += qty;
+                    this.portfolio[this.currentStock].totalSpent += cost;
+                    showToast(`Bought ${qty} ${this.currentStock} for $${cost.toFixed(2)}`, 'success');
+                    this.tradeLog.push({ type: 'Buy', qty, stock: this.currentStock, price, time: new Date().toLocaleTimeString() });
                 }
-
-                this.cash -= cost;
-                this.stocks += qty;
-                this.totalSpent += cost;
-                this.addTransaction('buy', qty, limitPrice);
-                this.updatePortfolio();
-                this.showToast(`Bought ${qty} stock${qty > 1 ? 's' : ''}`, 'success');
-                setTimeout(() => buyBtn.classList.remove('loading') && (buyBtn.disabled = false), 1000);
+                this.saveData();
+                this.updateUI();
             }
 
-            sellStock() {
-                const qty = parseInt(this.elements.quantity.value);
-                const orderType = this.elements.orderType.value;
-                const limitPrice = orderType === 'limit' ? parseFloat(this.elements.limitPrice.value) : this.price;
-                const revenue = limitPrice * qty;
-                const sellBtn = document.getElementById('sellBtn');
+            handleSell() {
+                const qty = parseInt($('quantity').value);
+                const type = $('orderType').value;
+                const price = type === 'limit' ? parseFloat($('limitPrice').value) : type === 'stop-loss' ? parseFloat($('stopLossPrice').value) : type === 'take-profit' ? parseFloat($('takeProfitPrice').value) : this.price;
+                const revenue = qty * price;
 
-                if (!this.validateOrder(qty, revenue, 'sell')) return;
-
-                sellBtn.classList.add('loading');
-                sellBtn.disabled = true;
-
-                if (orderType === 'limit' && this.price < limitPrice) {
-                    this.showToast(`Waiting for price to rise to $${limitPrice.toFixed(2)}`, 'info');
-                    setTimeout(() => sellBtn.classList.remove('loading') && (sellBtn.disabled = false), 1000);
+                if (!this.portfolio[this.currentStock] || this.portfolio[this.currentStock].qty < qty) {
+                    showToast('Not enough stocks to sell', 'error');
                     return;
                 }
 
-                this.cash += revenue;
-                this.stocks -= qty;
-                this.totalSpent -= (this.totalSpent / (this.stocks + qty)) * qty;
-                this.addTransaction('sell', qty, limitPrice);
-                this.updatePortfolio();
-                this.showToast(`Sold ${qty} stock${qty > 1 ? 's' : ''}`, 'success');
-                setTimeout(() => sellBtn.classList.remove('loading') && (sellBtn.disabled = false), 1000);
+                if (type === 'limit' && this.price < price) {
+                    this.limitOrders.push({ type: 'sell', qty, price });
+                    showToast(`Limit sell placed at $${price.toFixed(2)}`, 'info');
+                } else if (type === 'stop-loss') {
+                    this.stopLossOrders.push({ qty, price });
+                    showToast(`Stop-loss set at $${price.toFixed(2)}`, 'info');
+                } else if (type === 'take-profit') {
+                    this.takeProfitOrders.push({ qty, price });
+                    showToast(`Take-profit set at $${price.toFixed(2)}`, 'info');
+                } else {
+                    this.cash += revenue;
+                    const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
+                    this.portfolio[this.currentStock].qty -= qty;
+                    this.portfolio[this.currentStock].totalSpent -= avgCost * qty;
+                    if (this.portfolio[this.currentStock].qty === 0) delete this.portfolio[this.currentStock];
+                    showToast(`Sold ${qty} ${this.currentStock} for $${revenue.toFixed(2)}`, 'success');
+                    this.tradeLog.push({ type: 'Sell', qty, stock: this.currentStock, price, time: new Date().toLocaleTimeString() });
+                }
+                this.saveData();
+                this.updateUI();
             }
 
             validateOrder(qty, amount, type) {
                 if (isNaN(qty) || qty <= 0 || !Number.isInteger(qty)) {
-                    this.showToast('Enter a positive whole number', 'error');
+                    showToast('Quantity must be a positive integer', 'error');
                     return false;
                 }
                 if (type === 'buy' && this.cash < amount) {
-                    this.showToast('Insufficient funds!', 'error');
-                    return false;
-                }
-                if (type === 'sell' && this.stocks < qty) {
-                    this.showToast('Not enough stocks!', 'error');
+                    showToast('Insufficient funds', 'error');
                     return false;
                 }
                 return true;
             }
 
-            addTransaction(type, qty, price) {
-                this.transactions.unshift({ type, qty, price, time: new Date().toLocaleTimeString() });
+            checkOrders() {
+                this.limitOrders = this.limitOrders.filter(o => {
+                    if (o.type === 'buy' && this.price <= o.price) {
+                        this.cash -= o.qty * o.price;
+                        this.portfolio[this.currentStock] = this.portfolio[this.currentStock] || { qty: 0, totalSpent: 0 };
+                        this.portfolio[this.currentStock].qty += o.qty;
+                        this.portfolio[this.currentStock].totalSpent += o.qty * o.price;
+                        this.tradeLog.push({ type: 'Buy (Limit)', qty: o.qty, stock: this.currentStock, price: o.price, time: new Date().toLocaleTimeString() });
+                        notify('Limit Buy Executed', `${o.qty} ${this.currentStock} @ $${o.price.toFixed(2)}`);
+                        return false;
+                    } else if (o.type === 'sell' && this.price >= o.price) {
+                        this.cash += o.qty * o.price;
+                        const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
+                        this.portfolio[this.currentStock].qty -= o.qty;
+                        this.portfolio[this.currentStock].totalSpent -= avgCost * o.qty;
+                        this.tradeLog.push({ type: 'Sell (Limit)', qty: o.qty, stock: this.currentStock, price: o.price, time: new Date().toLocaleTimeString() });
+                        notify('Limit Sell Executed', `${o.qty} ${this.currentStock} @ $${o.price.toFixed(2)}`);
+                        return false;
+                    }
+                    return true;
+                });
+
+                this.stopLossOrders = this.stopLossOrders.filter(o => {
+                    if (this.price <= o.price) {
+                        this.cash += o.qty * this.price;
+                        const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
+                        this.portfolio[this.currentStock].qty -= o.qty;
+                        this.portfolio[this.currentStock].totalSpent -= avgCost * o.qty;
+                        this.tradeLog.push({ type: 'Sell (Stop-Loss)', qty: o.qty, stock: this.currentStock, price: this.price, time: new Date().toLocaleTimeString() });
+                        notify('Stop-Loss Triggered', `${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`);
+                        return false;
+                    }
+                    return true;
+                });
+
+                this.takeProfitOrders = this.takeProfitOrders.filter(o => {
+                    if (this.price >= o.price) {
+                        this.cash += o.qty * this.price;
+                        const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
+                        this.portfolio[this.currentStock].qty -= o.qty;
+                        this.portfolio[this.currentStock].totalSpent -= avgCost * o.qty;
+                        this.tradeLog.push({ type: 'Sell (Take-Profit)', qty: o.qty, stock: this.currentStock, price: this.price, time: new Date().toLocaleTimeString() });
+                        notify('Take-Profit Triggered', `${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`);
+                        return false;
+                    }
+                    return true;
+                });
+
+                this.shortPositions = this.shortPositions.filter(p => {
+                    const loss = (this.price - p.entryPrice) * p.qty * p.leverage;
+                    if (loss > p.margin * 0.9) {
+                        this.cash -= loss;
+                        this.tradeLog.push({ type: 'Short Liquidated', qty: p.qty, stock: this.currentStock, price: this.price, time: new Date().toLocaleTimeString() });
+                        showToast(`Short position liquidated: Loss $${loss.toFixed(2)}`, 'error');
+                        notify('Short Liquidation', `Loss: $${loss.toFixed(2)}`);
+                        return false;
+                    }
+                    return true;
+                });
             }
 
-            updatePortfolio() {
-                this.elements.cash.textContent = this.cash.toFixed(2);
-                this.elements.stocks.textContent = this.stocks;
-                const avgPrice = this.stocks > 0 ? (this.totalSpent / this.stocks).toFixed(2) : '0.00';
-                this.elements.avgPrice.textContent = avgPrice;
-                const pl = (this.stocks * this.price + this.cash - 10000).toFixed(2);
-                this.elements.pl.textContent = pl;
-                this.elements.pl.style.color = pl >= 0 ? 'var(--success)' : 'var(--danger)';
-                this.elements.totalValue.textContent = (this.stocks * this.price + this.cash).toFixed(2);
-                this.updateHistory();
-                this.saveToLocalStorage();
+            calculateShortValue() {
+                return this.shortPositions.reduce((sum, p) => sum + (p.entryPrice - this.price) * p.qty * p.leverage, 0);
             }
 
-            updateHistory() {
-                this.elements.history.innerHTML = this.transactions.slice(0, 10).map(t => `
-                    <div class="history-item">
-                        <span>${t.type === 'buy' ? 'Bought' : 'Sold'} ${t.qty}</span>
-                        <span>$${t.price.toFixed(2)} @ ${t.time}</span>
-                    </div>
-                `).join('');
-            }
-
-            updateSentiment() {
-                const change = (this.price - this.lastPrice) / this.lastPrice;
-                this.sentiment.bullish = Math.min(90, Math.max(10, 50 + change * 100));
-                this.sentiment.bearish = 100 - this.sentiment.bullish;
-                this.elements.bullish.textContent = `${this.sentiment.bullish.toFixed(0)}%`;
-                this.elements.bearish.textContent = `${this.sentiment.bearish.toFixed(0)}%`;
-            }
-
-            showToast(message, type = 'info') {
-                this.elements.toastMsg.textContent = message;
-                this.elements.toast.className = `toast ${type}`;
-                this.elements.toast.classList.add('show');
-                clearTimeout(this.toastTimeout);
-                this.toastTimeout = setTimeout(() => this.elements.toast.classList.remove('show'), 3000);
+            vote(type) {
+                this.sentiment.votes[type]++;
+                this.updateAnalytics();
+                showToast(`Voted ${type}`, 'success');
             }
 
             changeStock() {
-                this.currentStock = document.getElementById('stockSelect').value;
-                this.priceHistory = [this.price];
-                this.apiCalls = 0; // Reset API call counter
-                this.fetchLivePrice();
-                this.showToast(`Switched to ${this.currentStock}`, 'success');
+                this.currentStock = $('stockSelect').value;
+                this.price = this.stockPrices[this.currentStock] || 100;
+                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: this.price }];
+                this.apiCalls = 0;
+                this.updatePrice();
+                showToast(`Switched to ${this.currentStock}`, 'info');
             }
 
-            saveToLocalStorage() {
-                const data = {
+            changeTheme() {
+                const theme = $('themeSelect').value;
+                document.body.className = `${theme}-theme`;
+                localStorage.setItem('theme', theme);
+            }
+
+            applyTheme() {
+                const theme = localStorage.getItem('theme') || 'cyberpunk';
+                $('themeSelect').value = theme;
+                document.body.className = `${theme}-theme`;
+            }
+
+            saveData() {
+                localStorage.setItem(`simulator_${this.username}`, JSON.stringify({
                     cash: this.cash,
-                    stocks: this.stocks,
-                    totalSpent: this.totalSpent,
-                    transactions: this.transactions,
-                    currentStock: this.currentStock
-                };
-                localStorage.setItem(`stockSimulator_${this.username}`, JSON.stringify(data));
+                    portfolio: this.portfolio,
+                    currentStock: this.currentStock,
+                    limitOrders: this.limitOrders,
+                    stopLossOrders: this.stopLossOrders,
+                    takeProfitOrders: this.takeProfitOrders,
+                    shortPositions: this.shortPositions,
+                    stockPrices: this.stockPrices,
+                    sentiment: this.sentiment,
+                    performanceHistory: this.performanceHistory,
+                    tradeLog: this.tradeLog
+                }));
             }
 
-            loadFromLocalStorage() {
-                const data = JSON.parse(localStorage.getItem(`stockSimulator_${this.username}`));
+            loadData() {
+                const data = JSON.parse(localStorage.getItem(`simulator_${this.username}`));
                 if (data) {
                     Object.assign(this, data);
-                    document.getElementById('stockSelect').value = this.currentStock;
-                    this.updatePortfolio();
+                    $('stockSelect').value = this.currentStock;
+                    this.updateUI();
                 }
             }
 
-            toggleTheme() {
-                document.body.classList.toggle('light-theme');
-                const icon = document.querySelector('#themeToggle i');
-                icon.classList.toggle('fa-moon');
-                icon.classList.toggle('fa-sun');
+            exportData() {
+                const data = { cash: this.cash, portfolio: this.portfolio, tradeLog: this.tradeLog };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `portfolio_${this.username}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('Portfolio exported', 'success');
+            }
+
+            importData(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const data = JSON.parse(ev.target.result);
+                        this.cash = data.cash;
+                        this.portfolio = data.portfolio;
+                        this.tradeLog = data.tradeLog || [];
+                        this.saveData();
+                        this.updateUI();
+                        showToast('Portfolio imported', 'success');
+                    } catch (err) {
+                        showToast('Invalid file format', 'error');
+                    }
+                };
+                reader.readAsText(file);
             }
 
             logout() {
-                localStorage.removeItem(`stockSimulator_${this.username}`);
                 localStorage.removeItem('loggedInUser');
-                document.getElementById('simulatorPage').classList.add('hidden');
-                document.getElementById('authPage').classList.remove('hidden');
-                document.getElementById('loginCard').classList.remove('hidden');
-                document.getElementById('signUpCard').classList.add('hidden');
-                this.showToast('Logged out successfully', 'success');
+                $('simulatorPage').classList.add('hidden');
+                $('authPage').classList.remove('hidden');
+                $('loginCard').classList.remove('hidden');
+                $('signUpCard').classList.add('hidden');
+                showToast('Logged out', 'info');
             }
         }
 
-        function initAuth() {
-            const elements = {
-                loginBtn: document.getElementById('loginBtn'),
-                signUpBtn: document.getElementById('signUpBtn'),
-                toggleToSignUp: document.getElementById('toggleToSignUp'),
-                toggleToLogin: document.getElementById('toggleToLogin'),
-                loginUsername: document.getElementById('loginUsername'),
-                loginPassword: document.getElementById('loginPassword'),
-                signUpUsername: document.getElementById('signUpUsername'),
-                signUpPassword: document.getElementById('signUpPassword'),
-                signUpConfirmPassword: document.getElementById('signUpConfirmPassword'),
-                authPage: document.getElementById('authPage'),
-                simulatorPage: document.getElementById('simulatorPage'),
-                loginCard: document.getElementById('loginCard'),
-                signUpCard: document.getElementById('signUpCard'),
-                toast: document.getElementById('toast'),
-                toastMsg: document.getElementById('toastMsg')
-            };
+        // Authentication
+        class Auth {
+            static init() {
+                const loggedInUser = localStorage.getItem('loggedInUser');
+                if (loggedInUser) return new StockSimulator(loggedInUser);
 
-            const loggedInUser = localStorage.getItem('loggedInUser');
-            if (loggedInUser) {
-                elements.authPage.classList.add('hidden');
-                elements.simulatorPage.classList.remove('hidden');
-                new StockSimulator(loggedInUser);
-                return;
+                $('loginBtn').addEventListener('click', Auth.login);
+                $('signUpBtn').addEventListener('click', Auth.signUp);
+                $('toggleToSignUp').addEventListener('click', () => {
+                    $('loginCard').classList.add('hidden');
+                    $('signUpCard').classList.remove('hidden');
+                });
+                $('toggleToLogin').addEventListener('click', () => {
+                    $('signUpCard').classList.add('hidden');
+                    $('loginCard').classList.remove('hidden');
+                });
             }
 
-            elements.toggleToSignUp.addEventListener('click', () => {
-                elements.loginCard.classList.add('hidden');
-                elements.signUpCard.classList.remove('hidden');
-            });
-
-            elements.toggleToLogin.addEventListener('click', () => {
-                elements.signUpCard.classList.add('hidden');
-                elements.loginCard.classList.remove('hidden');
-            });
-
-            elements.signUpBtn.addEventListener('click', async () => {
-                const username = elements.signUpUsername.value.trim();
-                const password = elements.signUpPassword.value.trim();
-                const confirmPassword = elements.signUpConfirmPassword.value.trim();
-
-                if (!username || !password || !confirmPassword) return showToast('Please fill all fields', 'error');
-                if (password !== confirmPassword) return showToast('Passwords do not match', 'error');
+            static async login() {
+                const username = $('loginUsername').value.trim();
+                const password = $('loginPassword').value.trim();
+                if (!username || !password) return showToast('All fields required', 'error');
 
                 const users = JSON.parse(localStorage.getItem('users') || '{}');
-                if (users[username]) return showToast('Username already exists', 'error');
+                if (!users[username] || !(await bcrypt.compare(password, users[username]))) {
+                    return showToast('Invalid credentials', 'error');
+                }
 
-                const hashedPassword = await hashPassword(password);
-                users[username] = hashedPassword;
+                localStorage.setItem('loggedInUser', username);
+                new StockSimulator(username);
+            }
+
+            static async signUp() {
+                const username = $('signUpUsername').value.trim();
+                const password = $('signUpPassword').value.trim();
+                const confirm = $('signUpConfirmPassword').value.trim();
+                if (!username || !password || !confirm) return showToast('All fields required', 'error');
+                if (password !== confirm) return showToast('Passwords do not match', 'error');
+
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                if (users[username]) return showToast('Username taken', 'error');
+
+                users[username] = await bcrypt.hash(password, 10);
                 localStorage.setItem('users', JSON.stringify(users));
                 localStorage.setItem('loggedInUser', username);
-                elements.authPage.classList.add('hidden');
-                elements.simulatorPage.classList.remove('hidden');
                 new StockSimulator(username);
-                showToast(`Welcome, ${username}!`, 'success');
-            });
-
-            elements.loginBtn.addEventListener('click', async () => {
-                const username = elements.loginUsername.value.trim();
-                const password = elements.loginPassword.value.trim();
-
-                if (!username || !password) return showToast('Please enter username and password', 'error');
-
-                const users = JSON.parse(localStorage.getItem('users') || '{}');
-                const hashedPassword = await hashPassword(password);
-
-                if (!users[username] || users[username] !== hashedPassword) return showToast('Invalid credentials', 'error');
-
-                localStorage.setItem('loggedInUser', username);
-                elements.authPage.classList.add('hidden');
-                elements.simulatorPage.classList.remove('hidden');
-                new StockSimulator(username);
-                showToast(`Welcome back, ${username}!`, 'success');
-            });
-
-            function showToast(message, type) {
-                elements.toastMsg.textContent = message;
-                elements.toast.className = `toast ${type}`;
-                elements.toast.classList.add('show');
-                setTimeout(() => elements.toast.classList.remove('show'), 3000);
             }
         }
 
+        // Start App
         document.addEventListener('DOMContentLoaded', () => {
-            try {
-                if (typeof config === 'undefined' || !config.apiKey) {
-                    throw new Error('API key not found. Please create config.js with your Alpha Vantage API key.');
-                }
-                initAuth();
-            } catch (error) {
-                console.error('Initialization failed:', error);
-                alert('Failed to start application: ' + error.message);
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                showToast('Warning: Use HTTPS for security', 'warning');
             }
+            Auth.init();
         });
     </script>
 </body>
