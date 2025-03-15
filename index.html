@@ -20,6 +20,7 @@
             --neutral: #7a8299;
             --shadow: rgba(0, 0, 0, 0.5);
             --glow: 0 0 10px var(--accent-cyan);
+            transition: all 0.5s ease;
         }
 
         body.light-theme {
@@ -268,6 +269,10 @@
             box-shadow: 0 2px 10px var(--shadow);
         }
 
+        .btn:active {
+            transform: scale(0.95);
+        }
+
         .btn::before {
             content: '';
             position: absolute;
@@ -323,6 +328,21 @@
             top: 1rem;
             max-height: calc(100vh - 2rem);
             overflow-y: auto;
+        }
+
+        /* Save Indicator */
+        .save-indicator {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.8rem;
+            color: var(--success);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .save-indicator.active {
+            opacity: 1;
         }
 
         /* Footer */
@@ -388,7 +408,6 @@
     </style>
 </head>
 <body>
-    <!-- Simulator Page (No Auth Page) -->
     <div class="simulator" id="simulatorPage">
         <header>
             <h1>Quantum Stock Trader 2025</h1>
@@ -405,6 +424,7 @@
                     <option value="light">Light</option>
                     <option value="minimal">Minimal</option>
                 </select>
+                <button class="btn" id="resetBtn"><span><i class="fas fa-redo"></i> Reset</span></button>
             </div>
         </header>
 
@@ -436,6 +456,7 @@
                 <div class="list-item"><span>Profit/Loss:</span> $<span id="profitLoss">0.00</span></div>
                 <div class="list-item"><span>Volatility:</span> <span id="volatility">0.00%</span></div>
                 <canvas id="performanceChart" aria-label="Portfolio Performance Chart" style="margin-top: 1rem;"></canvas>
+                <canvas id="portfolioPie" aria-label="Portfolio Breakdown" style="margin-top: 1rem; max-height: 200px;"></canvas>
                 <h2>Trade Log</h2>
                 <div id="tradeLog"></div>
             </div>
@@ -477,6 +498,8 @@
             <i class="fas fa-info-circle"></i> <span id="toastMessage"></span>
         </div>
 
+        <div class="save-indicator" id="saveIndicator">Saved</div>
+
         <footer>
             © 2025 Quantum Stock Trader by yashnigam07. All rights reserved.
         </footer>
@@ -495,6 +518,12 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         };
 
+        const showSaveIndicator = () => {
+            const indicator = $('saveIndicator');
+            indicator.classList.add('active');
+            setTimeout(() => indicator.classList.remove('active'), 1000);
+        };
+
         const notify = (title, body) => {
             if (Notification.permission === 'granted') new Notification(title, { body });
             else if (Notification.permission !== 'denied') Notification.requestPermission().then(p => p === 'granted' && new Notification(title, { body }));
@@ -506,6 +535,14 @@
             return now.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
         };
 
+        const debounce = (func, wait) => {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        };
+
         // Simulator Class
         class StockSimulator {
             constructor() {
@@ -514,7 +551,7 @@
                 this.currentStock = 'AAPL';
                 this.stockPrices = { AAPL: 100, GOOGL: 100, TSLA: 100, BTC: 100 };
                 this.price = 100;
-                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: 100 }];
+                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: 100, volume: 500 }];
                 this.lastPrice = 100;
                 this.limitOrders = [];
                 this.stopLossOrders = [];
@@ -528,6 +565,7 @@
                 this.performanceHistory = [{ time: new Date().toLocaleTimeString(), value: 10000 }];
                 this.tradeLog = [];
                 this.apiKey = config.apiKey;
+                this.annotations = [];
                 this.init();
             }
 
@@ -558,6 +596,7 @@
                     const panel = $('tradingPanel');
                     panel.classList.toggle('collapsed');
                 });
+                $('resetBtn').addEventListener('click', () => this.resetSimulator());
 
                 $('toggleEMA').addEventListener('change', () => {
                     this.priceChart.data.datasets[1].hidden = !$('toggleEMA').checked;
@@ -571,6 +610,12 @@
                     this.priceChart.data.datasets[3].hidden = !$('toggleBB').checked;
                     this.priceChart.data.datasets[4].hidden = !$('toggleBB').checked;
                     this.priceChart.update();
+                });
+
+                // Keyboard Shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'b' || e.key === 'B') this.handleBuy();
+                    if (e.key === 's' || e.key === 'S') this.handleSell();
                 });
             }
 
@@ -616,7 +661,7 @@
                             {
                                 label: 'Volume',
                                 type: 'bar',
-                                data: this.priceHistory.map(() => Math.random() * 1000),
+                                data: this.priceHistory.map(h => h.volume),
                                 backgroundColor: 'rgba(155, 89, 182, 0.5)',
                                 yAxisID: 'volume',
                                 barThickness: 10
@@ -641,11 +686,14 @@
                                     label: (context) => {
                                         const dataset = context.dataset.label;
                                         const value = context.parsed.y;
-                                        return `${dataset}: ${dataset === 'Price' ? '$' : ''}${value.toFixed(2)}${dataset === 'RSI' ? '' : ''}`;
+                                        return `${dataset}: ${dataset === 'Price' ? '$' : ''}${value.toFixed(2)}${dataset === 'RSI' ? '' : dataset === 'Volume' ? ' shares' : ''}`;
                                     }
                                 }
                             },
-                            zoom: { zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'xy' }, pan: { enabled: true, mode: 'xy' } }
+                            zoom: { zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'xy' }, pan: { enabled: true, mode: 'xy' } },
+                            annotation: {
+                                annotations: this.annotations
+                            }
                         }
                     }
                 });
@@ -668,6 +716,23 @@
                         animation: { duration: 1000, easing: 'easeInOutQuad' },
                         scales: { y: { ticks: { callback: v => `$${v.toFixed(2)}` } }, x: { ticks: { maxTicksLimit: 10 } } },
                         plugins: { legend: { display: false } }
+                    }
+                });
+
+                this.portfolioPie = new Chart($('portfolioPie'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Cash'],
+                        datasets: [{
+                            data: [this.cash],
+                            backgroundColor: ['var(--accent-cyan)', 'var(--accent-purple)', 'var(--accent-orange)', 'var(--success)']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: 'var(--text-primary)' } }
+                        }
                     }
                 });
 
@@ -701,12 +766,12 @@
                 }
                 let avgGain = gains.slice(0, period).reduce((a, b) => a + b, 0) / period;
                 let avgLoss = losses.slice(0, period).reduce((a, b) => a + b, 0) / period;
-                const rs = avgGain / avgLoss;
+                const rs = avgGain / avgLoss || 0;
                 const rsi = [null, ...Array(period - 1).fill(null), 100 - (100 / (1 + rs))];
                 for (let i = period; i < gains.length; i++) {
                     avgGain = (avgGain * (period - 1) + gains[i]) / period;
                     avgLoss = (avgLoss * (period - 1) + losses[i]) / period;
-                    rsi.push(100 - (100 / (1 + avgGain / avgLoss)));
+                    rsi.push(100 - (100 / (1 + (avgGain / avgLoss || 0))));
                 }
                 return rsi;
             }
@@ -734,7 +799,8 @@
                 this.priceUpdateInterval = setInterval(() => this.updatePrice(), 15000);
                 setInterval(() => this.simulateDarkPool(), 30000);
                 setInterval(() => this.updateClock(), 1000);
-                this.updateUI();
+                this.debouncedUpdateUI = debounce(this.updateUI.bind(this), 200);
+                this.debouncedUpdateUI();
             }
 
             updateClock() {
@@ -767,13 +833,14 @@
                     this.simulatePrice();
                     showToast('API rate limit reached, using simulation', 'warning');
                 }
-                this.updateUI();
+                this.debouncedUpdateUI();
             }
 
             simulatePrice() {
                 this.lastPrice = this.price;
                 const volatility = this.currentStock === 'BTC' ? 0.05 : 0.02;
-                this.price *= (1 + (Math.random() - 0.5) * volatility);
+                const change = (Math.random() - 0.5) * volatility;
+                this.price *= (1 + change);
                 this.price = Math.max(10, this.price.toFixed(2));
                 this.stockPrices[this.currentStock] = this.price;
                 this.isLive = false;
@@ -781,12 +848,25 @@
 
             simulateDarkPool() {
                 const impact = (Math.random() - 0.5) * 0.03;
+                this.lastPrice = this.price;
                 this.price *= (1 + impact);
+                this.annotations.push({
+                    type: 'line',
+                    xMin: this.priceHistory.length - 1,
+                    xMax: this.priceHistory.length - 1,
+                    yMin: this.price * 0.95,
+                    yMax: this.price * 1.05,
+                    borderColor: impact > 0 ? 'var(--success)' : 'var(--danger)',
+                    borderWidth: 2,
+                    label: { content: 'Dark Pool', position: 'top', enabled: true, backgroundColor: 'rgba(0, 0, 0, 0.7)' }
+                });
                 showToast(`Dark pool trade: ${impact > 0 ? 'Buy' : 'Sell'} pressure`, impact > 0 ? 'success' : 'error');
-                this.updateUI();
+                this.debouncedUpdateUI();
             }
 
             updateUI() {
+                if (!this.priceChart.canvas.isIntersecting && !this.performanceChart.canvas.isIntersecting) return;
+
                 $('currentPrice').textContent = this.price.toFixed(2);
                 const change = ((this.price - this.lastPrice) / this.lastPrice * 100).toFixed(2);
                 $('priceTrend').textContent = `${change > 0 ? '+' : ''}${change}%`;
@@ -794,8 +874,12 @@
                 $('liveStatus').textContent = this.isLive ? 'Live' : 'Offline';
                 $('liveStatus').className = `live-indicator ${this.isLive ? 'live' : 'offline'}`;
 
-                this.priceHistory.push({ time: new Date().toLocaleTimeString(), price: this.price });
-                if (this.priceHistory.length > 60) this.priceHistory.shift();
+                const volume = Math.abs(this.price - this.lastPrice) * 100 + Math.random() * 500;
+                this.priceHistory.push({ time: new Date().toLocaleTimeString(), price: this.price, volume });
+                if (this.priceHistory.length > 60) {
+                    this.priceHistory.shift();
+                    this.annotations.shift();
+                }
                 this.priceChart.data.labels = this.priceHistory.map(h => h.time);
                 this.priceChart.data.datasets[0].data = this.priceHistory.map(h => h.price);
                 this.priceChart.data.datasets[1].data = this.calculateEMA(10);
@@ -803,7 +887,8 @@
                 const bb = this.calculateBollingerBands(20);
                 this.priceChart.data.datasets[3].data = bb.upper;
                 this.priceChart.data.datasets[4].data = bb.lower;
-                this.priceChart.data.datasets[5].data = this.priceHistory.map(() => Math.random() * 1000);
+                this.priceChart.data.datasets[5].data = this.priceHistory.map(h => h.volume);
+                this.priceChart.options.plugins.annotation.annotations = this.annotations;
                 this.priceChart.update();
 
                 const totalStocks = this.portfolio[this.currentStock]?.qty || 0;
@@ -818,6 +903,7 @@
                 $('profitLoss').style.color = profitLoss >= 0 ? 'var(--success)' : 'var(--danger)';
                 this.calculateVolatility();
                 this.updatePerformance(totalValue);
+                this.updatePortfolioPie();
                 this.updateAnalytics();
                 this.updateLeaderboard();
                 this.updateTradeLog();
@@ -850,6 +936,16 @@
                 this.performanceChart.update();
             }
 
+            updatePortfolioPie() {
+                const stockValues = Object.entries(this.portfolio).map(([stock, data]) => ({
+                    label: stock,
+                    value: data.qty * (this.stockPrices[stock] || 100)
+                }));
+                this.portfolioPie.data.labels = ['Cash', ...stockValues.map(s => s.label)];
+                this.portfolioPie.data.datasets[0].data = [this.cash, ...stockValues.map(s => s.value)];
+                this.portfolioPie.update();
+            }
+
             updateAnalytics() {
                 $('sharpeRatio').textContent = this.calculateSharpeRatio();
                 const totalVotes = this.sentiment.votes.bullish + this.sentiment.votes.bearish;
@@ -859,7 +955,7 @@
 
             updateLeaderboard() {
                 const totalValue = this.cash + Object.entries(this.portfolio).reduce((sum, [s, d]) => sum + d.qty * (this.stockPrices[s] || 100), 0);
-                this.leaderboard['Guest'] = totalValue; // Default user as "Guest"
+                this.leaderboard['Guest'] = totalValue;
                 localStorage.setItem('leaderboard', JSON.stringify(this.leaderboard));
                 const sorted = Object.entries(this.leaderboard).sort((a, b) => b[1] - a[1]).slice(0, 5);
                 $('leaderboard').innerHTML = sorted.map(([user, val]) => `<div class="list-item"><span>${user}</span><span>$${val.toFixed(2)}</span></div>`).join('');
@@ -878,7 +974,7 @@
                 const leverage = type === 'short' ? parseInt($('leverage').value) : 1;
                 const cost = qty * price;
 
-                if (!this.validateOrder(qty, cost, 'buy')) return;
+                if (!this.validateOrder(qty, cost, price, leverage, 'buy')) return;
 
                 if (type === 'limit' && this.price > price) {
                     this.limitOrders.push({ type: 'buy', qty, price });
@@ -903,7 +999,7 @@
                     this.tradeLog.push({ type: 'Buy', qty, stock: this.currentStock, price, time: new Date().toLocaleTimeString() });
                 }
                 this.saveData();
-                this.updateUI();
+                this.debouncedUpdateUI();
             }
 
             handleSell() {
@@ -936,12 +1032,20 @@
                     this.tradeLog.push({ type: 'Sell', qty, stock: this.currentStock, price, time: new Date().toLocaleTimeString() });
                 }
                 this.saveData();
-                this.updateUI();
+                this.debouncedUpdateUI();
             }
 
-            validateOrder(qty, amount, type) {
+            validateOrder(qty, amount, price, leverage, type) {
                 if (isNaN(qty) || qty <= 0 || !Number.isInteger(qty)) {
                     showToast('Quantity must be a positive integer', 'error');
+                    return false;
+                }
+                if (isNaN(price) || price <= 0) {
+                    showToast('Price must be a positive number', 'error');
+                    return false;
+                }
+                if (type === 'short' && (isNaN(leverage) || leverage < 1 || leverage > 10)) {
+                    showToast('Leverage must be between 1 and 10', 'error');
                     return false;
                 }
                 if (type === 'buy' && this.cash < amount) {
@@ -1025,7 +1129,8 @@
             changeStock() {
                 this.currentStock = $('stockSelect').value;
                 this.price = this.stockPrices[this.currentStock] || 100;
-                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: this.price }];
+                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: this.price, volume: 500 }];
+                this.annotations = [];
                 this.apiCalls = 0;
                 this.updatePrice();
                 showToast(`Switched to ${this.currentStock}`, 'info');
@@ -1064,6 +1169,7 @@
                     performanceHistory: this.performanceHistory,
                     tradeLog: this.tradeLog
                 }));
+                showSaveIndicator();
             }
 
             loadData() {
@@ -1071,7 +1177,7 @@
                 if (data) {
                     Object.assign(this, data);
                     $('stockSelect').value = this.currentStock;
-                    this.updateUI();
+                    this.debouncedUpdateUI();
                 }
             }
 
@@ -1094,11 +1200,11 @@
                 reader.onload = (ev) => {
                     try {
                         const data = JSON.parse(ev.target.result);
-                        this.cash = data.cash;
-                        this.portfolio = data.portfolio;
+                        this.cash = data.cash || 10000;
+                        this.portfolio = data.portfolio || {};
                         this.tradeLog = data.tradeLog || [];
                         this.saveData();
-                        this.updateUI();
+                        this.debouncedUpdateUI();
                         showToast('Portfolio imported', 'success');
                     } catch (err) {
                         showToast('Invalid file format', 'error');
@@ -1106,14 +1212,40 @@
                 };
                 reader.readAsText(file);
             }
+
+            resetSimulator() {
+                this.cash = 10000;
+                this.portfolio = {};
+                this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: this.price, volume: 500 }];
+                this.limitOrders = [];
+                this.stopLossOrders = [];
+                this.takeProfitOrders = [];
+                this.shortPositions = [];
+                this.sentiment = { bullish: 50, bearish: 50, votes: { bullish: 0, bearish: 0 } };
+                this.performanceHistory = [{ time: new Date().toLocaleTimeString(), value: 10000 }];
+                this.tradeLog = [];
+                this.annotations = [];
+                this.saveData();
+                this.debouncedUpdateUI();
+                showToast('Simulator reset', 'success');
+            }
         }
+
+        // Intersection Observer for Lazy Loading
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                entry.target.isIntersecting = entry.isIntersecting;
+            });
+        }, { threshold: 0.1 });
 
         // Start App
         document.addEventListener('DOMContentLoaded', () => {
             if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
                 showToast('Warning: Use HTTPS for security', 'warning');
             }
-            new StockSimulator();
+            const simulator = new StockSimulator();
+            observer.observe(simulator.priceChart.canvas);
+            observer.observe(simulator.performanceChart.canvas);
         });
     </script>
 </body>
