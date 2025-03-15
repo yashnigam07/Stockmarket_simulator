@@ -3,41 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum Stock Trader 2025</title>
+    <title>TradePulse 2049</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Trading Favicon (Candlestick Chart Icon) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj4KICA8cGF0aCBkPSJNMiAxNmMwLTcuNzMyIDYuMjY4LTE0IDE0LTE0czE0IDYuMjY4IDE0IDE0LTE0IDgtMTQtOHptOS0zaC0ydjZhMiAyIDAgMCAwIDIgMnY2aDJ2LTZhMiAyIDAgMCAwIDItMnYtNnptOC0xaC0ydjRhMiAyIDAgMCAwIDIgMnY4aDJ2LTRhMiAyIDAgMCAwIDItMnYtNHoiIGZpbGw9IiM2MGE1ZmEiLz4KICA8cGF0aCBkPSJNMTYgMTJhMiAyIDAgMCAwLTIgMnY0aDR2LTRhMiAyIDAgMCAwLTItMnoiIGZpbGw9IiNhN2IzZmEiLz4KPC9zdmc+">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <style>
-        /* Theme Variables */
+        /* Base Theme Variables (Light Mode) */
         :root {
-            --bg-primary: #0d0d1a;
-            --bg-secondary: #1a1a2e;
-            --text-primary: #e0e0f5;
-            --accent-purple: #9b59b6;
-            --accent-cyan: #00e5ff;
-            --accent-orange: #ff8c00;
-            --success: #00e676;
-            --danger: #ff5252;
-            --neutral: #7a8299;
-            --shadow: rgba(0, 0, 0, 0.5);
-            --glow: 0 0 10px var(--accent-cyan);
+            --bg-primary: #f9fafb;
+            --bg-secondary: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --accent-blue: #60a5fa;
+            --accent-mint: #6ee7b7;
+            --accent-peach: #fb923c;
+            --accent-lavender: #a78bfa;
+            --success: #10b981;
+            --danger: #ef4444;
+            --shadow: rgba(0, 0, 0, 0.05);
+            --glow-soft: 0 0 8px rgba(96, 165, 250, 0.2);
+            --border: #e5e7eb;
+            --holo-blue: rgba(96, 165, 250, 0.15);
         }
 
-        body.light-theme {
-            --bg-primary: #f0f4f8;
-            --bg-secondary: #ffffff;
-            --text-primary: #1a1a2e;
-            --accent-purple: #6b48ff;
-            --accent-cyan: #00b7eb;
-            --neutral: #4a4a4a;
+        /* Dusk Theme */
+        body.dusk-theme {
+            --bg-primary: #ede9fe;
+            --bg-secondary: #f5f5f5;
+            --text-primary: #4b3f72;
+            --text-secondary: #7c6e9e;
+            --accent-blue: #93c5fd;
+            --accent-mint: #6ee7b7;
+            --accent-peach: #fb923c;
+            --accent-lavender: #c4b5fd;
+            --border: #d1d5db;
         }
 
-        body.minimal-theme {
-            --bg-primary: #e0e0e0;
-            --bg-secondary: #ffffff;
-            --text-primary: #333333;
-            --accent-purple: #555555;
-            --accent-cyan: #777777;
-            --accent-orange: #999999;
+        /* Morning Theme */
+        body.morning-theme {
+            --bg-primary: #fefce8;
+            --bg-secondary: #fffbeb;
+            --text-primary: #5c4033;
+            --text-secondary: #8b6f47;
+            --accent-blue: #bfdbfe;
+            --accent-mint: #6ee7b7;
+            --accent-peach: #fb923c;
+            --accent-lavender: #ddd6fe;
+            --border: #e7e5d4;
+        }
+
+        /* Dark Mode */
+        body.dark-theme {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --text-primary: #d1d5db;
+            --text-secondary: #9ca3af;
+            --accent-blue: #60a5fa;
+            --accent-mint: #6ee7b7;
+            --accent-peach: #fb923c;
+            --accent-lavender: #a78bfa;
+            --success: #10b981;
+            --danger: #ef4444;
+            --shadow: rgba(0, 0, 0, 0.2);
+            --glow-soft: 0 0 8px rgba(96, 165, 250, 0.3);
+            --border: #374151;
+            --holo-blue: rgba(96, 165, 250, 0.25);
         }
 
         * {
@@ -47,88 +79,106 @@
         }
 
         body {
-            font-family: 'Roboto Mono', monospace;
+            font-family: 'Poppins', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.6;
+            line-height: 1.5;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* Header */
         header {
             background: var(--bg-secondary);
-            padding: 1rem 2rem;
+            padding: 0.5rem 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 15px var(--shadow);
+            box-shadow: 0 2px 8px var(--shadow);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(6px);
         }
 
         header h1 {
-            font-size: 1.75rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
             font-weight: 700;
-            background: linear-gradient(45deg, var(--accent-purple), var(--accent-cyan));
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-lavender));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            cursor: pointer;
         }
 
         .header-controls {
             display: flex;
-            gap: 1rem;
+            gap: 0.4rem;
+            align-items: center;
         }
 
         .header-controls select, .header-controls button {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--accent-purple);
-            border-radius: 8px;
-            background: transparent;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-primary);
             color: var(--text-primary);
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .header-controls select:hover, .header-controls button:hover {
-            border-color: var(--accent-cyan);
-            box-shadow: var(--glow);
+            font-size: 0.8rem;
+            min-width: 40px;
+            text-align: center;
         }
 
         /* Main Layout */
         .simulator-grid {
-            max-width: 1600px;
-            margin: 2rem auto;
+            max-width: 1920px;
+            margin: 1rem auto;
             padding: 0 1rem;
             display: grid;
-            grid-template-columns: 3fr 2fr 1fr;
-            gap: 1.5rem;
+            grid-template-columns: 4fr 2fr 1fr;
+            gap: 0.75rem;
             flex-grow: 1;
         }
 
         /* Card Styling */
         .card {
             background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px var(--shadow);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 25px var(--shadow);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 10px var(--shadow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            opacity: 0;
         }
 
         .card h2 {
-            font-size: 1.25rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
             font-weight: 600;
-            color: var(--accent-cyan);
-            margin-bottom: 1rem;
+            color: var(--accent-lavender);
+            margin-bottom: 0.5rem;
             cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card h2::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.7rem;
+            opacity: 0.6;
+        }
+
+        .card.collapsed h2::after {
+            transform: rotate(180deg);
         }
 
         .card.collapsed > *:not(h2) { display: none; }
@@ -137,96 +187,93 @@
         .price-display {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
+            gap: 0.5rem;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .price-display::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 30%;
+            height: 2px;
+            background: var(--accent-blue);
+            animation: pulseLine 1.5s infinite ease;
+        }
+
+        @keyframes pulseLine {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
         }
 
         .price-trend, .live-indicator {
-            font-size: 1rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 500;
         }
 
-        .trend-up { background: rgba(0, 230, 118, 0.2); color: var(--success); }
-        .trend-down { background: rgba(255, 82, 82, 0.2); color: var(--danger); }
-        .live { background: rgba(0, 230, 118, 0.2); color: var(--success); }
-        .offline { background: rgba(255, 82, 82, 0.2); color: var(--danger); }
+        .trend-up { background: var(--success); color: #ffffff; }
+        .trend-down { background: var(--danger); color: #ffffff; }
+        .live { background: var(--success); color: #ffffff; }
+        .offline { background: var(--danger); color: #ffffff; }
 
         /* Trading Panel */
         .trading-panel {
             background: var(--bg-secondary);
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px var(--shadow);
+            padding: 0.75rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--shadow);
             position: sticky;
-            bottom: 1rem;
-            margin: 1rem auto;
-            max-width: 1000px;
+            bottom: 0.5rem;
+            margin: 0.5rem auto;
+            max-width: 1400px;
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.5rem;
             justify-content: center;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(4px);
         }
 
         .trading-panel input, .trading-panel select {
-            padding: 0.75rem;
-            border: 1px solid var(--accent-purple);
-            border-radius: 8px;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
             background: var(--bg-primary);
             color: var(--text-primary);
             width: 120px;
-            transition: all 0.3s ease;
+            font-size: 0.8rem;
         }
 
         .trading-panel input:focus, .trading-panel select:focus {
-            border-color: var(--accent-cyan);
-            box-shadow: var(--glow);
+            border-color: var(--accent-blue);
+            box-shadow: var(--glow-soft);
             outline: none;
         }
 
-        /* Improved Button Styling */
+        /* Button Styling */
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
+            border-radius: 6px;
+            font-weight: 500;
             cursor: pointer;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 2px 10px var(--shadow);
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-lavender));
+            color: #ffffff;
+            box-shadow: 0 1px 8px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.85rem;
         }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
-        }
-
-        .btn:hover::before {
-            width: 200%;
-            height: 200%;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px var(--glow);
-        }
-
-        .btn-buy { background: linear-gradient(135deg, var(--success), #00c853); }
-        .btn-sell { background: linear-gradient(135deg, var(--danger), #d81b60); }
-        .btn span { display: flex; align-items: center; gap: 0.5rem; }
+        .btn-buy { background: linear-gradient(135deg, var(--success), var(--accent-mint)); }
+        .btn-sell { background: linear-gradient(135deg, var(--danger), var(--accent-peach)); }
 
         /* Toast */
         .toast {
@@ -234,150 +281,178 @@
             bottom: 1rem;
             right: 1rem;
             background: var(--bg-secondary);
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-cyan);
-            box-shadow: 0 4px 15px var(--shadow);
-            transform: translateX(120%);
-            transition: transform 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-blue);
+            box-shadow: 0 2px 10px var(--shadow);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+            font-size: 0.85rem;
         }
 
-        .toast.show { transform: translateX(0); }
-        .toast.success { border-left-color: var(--success); }
-        .toast.error { border-left-color: var(--danger); }
-        .toast.warning { border-left-color: var(--accent-orange); }
-
-        /* Auth Page */
-        .auth-container {
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
         }
 
-        .auth-card {
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
             background: var(--bg-secondary);
-            padding: 2rem;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 6px 25px var(--shadow);
-            text-align: center;
-        }
-
-        .auth-card h2 {
-            font-size: 2rem;
-            color: var(--accent-cyan);
-            margin-bottom: 1.5rem;
-        }
-
-        .auth-card input {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--accent-purple);
+            padding: 1rem;
             border-radius: 8px;
-            background: var(--bg-primary);
+            max-width: 700px;
+            width: 90%;
+            box-shadow: 0 4px 15px var(--shadow);
+            position: relative;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-content h3 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 0.5rem;
+            color: var(--accent-lavender);
+            font-size: 1.1rem;
+        }
+
+        .modal-content a, .modal-content p {
             color: var(--text-primary);
-            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            margin: 0.4rem 0;
+            font-size: 0.85rem;
         }
 
-        .auth-card input:focus {
-            border-color: var(--accent-cyan);
-            box-shadow: var(--glow);
-            outline: none;
+        .modal-content a:hover {
+            color: var(--accent-blue);
         }
 
-        .auth-toggle {
-            color: var(--accent-orange);
+        .modal-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
             cursor: pointer;
-            transition: color 0.3s ease;
+            color: var(--text-secondary);
         }
 
-        .auth-toggle:hover { color: var(--accent-cyan); }
+        .modal-close:hover {
+            color: var(--accent-blue);
+        }
+
+        /* Dashboard Toggle */
+        .dashboard-toggle {
+            position: fixed;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 1px 6px var(--shadow);
+        }
 
         /* Footer */
         footer {
             background: var(--bg-secondary);
-            padding: 1rem;
+            padding: 0.5rem;
             text-align: center;
-            color: var(--neutral);
-            font-size: 0.9rem;
-            box-shadow: 0 -2px 15px var(--shadow);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            box-shadow: 0 -1px 6px var(--shadow);
             margin-top: auto;
+            position: relative;
         }
 
-        /* Collapsible Lists */
-        .list-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--neutral);
-            font-size: 0.9rem;
+        footer::before {
+            content: 'TradePulse v2.0.49';
+            position: absolute;
+            top: 50%;
+            right: 0.5rem;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            opacity: 0.5;
         }
 
         /* Responsive Design */
-        @media (max-width: 1200px) {
-            .simulator-grid { grid-template-columns: 2fr 1fr; }
+        @media (max-width: 1400px) {
+            .simulator-grid { grid-template-columns: 3fr 2fr; }
             .card:nth-child(3) { grid-column: span 2; }
         }
 
-        @media (max-width: 800px) {
+        @media (max-width: 900px) {
             .simulator-grid { grid-template-columns: 1fr; }
-            .trading-panel { flex-direction: column; align-items: center; }
+            .trading-panel { flex-direction: column; align-items: stretch; }
             .trading-panel input, .trading-panel select { width: 100%; }
-            .price-display { font-size: 2rem; }
-            .header-controls { flex-direction: column; gap: 0.5rem; }
+            .price-display { font-size: 1.6rem; }
+            .header-controls { flex-wrap: wrap; gap: 0.3rem; }
+            .dashboard-toggle { top: 3.5rem; }
         }
 
         .hidden { display: none; }
+        .list-item { display: flex; justify-content: space-between; margin: 0.3rem 0; font-size: 0.8rem; }
+        .order-list { margin-top: 0.5rem; font-size: 0.8rem; max-height: 150px; overflow-y: auto; }
+        .order-list div { padding: 0.3rem 0; border-bottom: 1px solid var(--border); }
     </style>
 </head>
 <body>
-    <!-- Auth Page -->
-    <div class="auth-container" id="authPage">
-        <div class="auth-card" id="loginCard">
-            <h2>Login</h2>
-            <input type="text" id="loginUsername" placeholder="Username" required aria-label="Username">
-            <input type="password" id="loginPassword" placeholder="Password" required aria-label="Password">
-            <button class="btn btn-buy" id="loginBtn"><span><i class="fas fa-sign-in-alt"></i> Login</span></button>
-            <p class="auth-toggle" id="toggleToSignUp">New User? Sign Up</p>
-        </div>
-        <div class="auth-card hidden" id="signUpCard">
-            <h2>Sign Up</h2>
-            <input type="text" id="signUpUsername" placeholder="Username" required aria-label="Username">
-            <input type="password" id="signUpPassword" placeholder="Password" required aria-label="Password">
-            <input type="password" id="signUpConfirmPassword" placeholder="Confirm Password" required aria-label="Confirm Password">
-            <button class="btn btn-buy" id="signUpBtn"><span><i class="fas fa-user-plus"></i> Sign Up</span></button>
-            <p class="auth-toggle" id="toggleToLogin">Have an account? Login</p>
-        </div>
-    </div>
-
     <!-- Simulator Page -->
-    <div class="simulator hidden" id="simulatorPage">
+    <div class="simulator" id="simulatorPage">
         <header>
-            <h1>Quantum Stock Trader 2025</h1>
+            <h1>TradePulse 2049</h1>
             <div class="header-controls">
                 <select id="stockSelect" aria-label="Select Stock">
                     <option value="AAPL">Apple (AAPL)</option>
                     <option value="GOOGL">Google (GOOGL)</option>
                     <option value="TSLA">Tesla (TSLA)</option>
                     <option value="BTC">Bitcoin (BTC)</option>
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="SPCE">Virgin Galactic (SPCE)</option>
                 </select>
                 <select id="themeSelect" aria-label="Select Theme">
-                    <option value="cyberpunk">Cyberpunk</option>
-                    <option value="light">Light</option>
-                    <option value="minimal">Minimal</option>
+                    <option value="default">Light</option>
+                    <option value="dusk">Dusk</option>
+                    <option value="morning">Morning</option>
+                    <option value="dark">Dark</option>
                 </select>
-                <button id="logoutBtn" aria-label="Logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <button id="newsBtn" aria-label="Market News"><i class="fas fa-newspaper"></i></button>
+                <button id="aiPredictBtn" aria-label="AI Prediction"><i class="fas fa-brain"></i></button>
+                <button id="ordersBtn" aria-label="View Orders"><i class="fas fa-list"></i></button>
+                <button id="soundToggle" aria-label="Toggle Sound"><i class="fas fa-volume-up"></i></button>
+                <button id="settingsBtn" aria-label="Settings"><i class="fas fa-cog"></i></button>
             </div>
         </header>
 
-        <div class="simulator-grid">
+        <div class="dashboard-toggle" id="dashboardToggle" aria-label="Toggle Dashboard">
+            <i class="fas fa-eye"></i>
+        </div>
+
+        <div class="simulator-grid" id="simulatorGrid">
             <div class="card chart-card">
                 <div class="price-display">
                     $<span id="currentPrice">100.00</span>
@@ -394,11 +469,11 @@
                 <div class="list-item"><span>Total Value:</span> $<span id="totalValue">10000.00</span></div>
                 <div class="list-item"><span>Profit/Loss:</span> $<span id="profitLoss">0.00</span></div>
                 <div class="list-item"><span>Volatility:</span> <span id="volatility">0.00%</span></div>
-                <canvas id="performanceChart" aria-label="Portfolio Performance Chart" style="margin-top: 1rem;"></canvas>
+                <canvas id="performanceChart" aria-label="Portfolio Performance Chart" style="margin-top: 0.5rem;"></canvas>
             </div>
 
             <div class="card analytics-card">
-                <h2>Analytics & Social</h2>
+                <h2>Analytics & Sentiment</h2>
                 <div class="list-item"><span>Sharpe Ratio:</span> <span id="sharpeRatio">0.00</span></div>
                 <div class="list-item"><span>Bullish Sentiment:</span> <span id="bullish">50%</span></div>
                 <div class="list-item"><span>Bearish Sentiment:</span> <span id="bearish">50%</span></div>
@@ -417,6 +492,7 @@
                 <option value="stop-loss">Stop-Loss</option>
                 <option value="take-profit">Take-Profit</option>
                 <option value="short">Short Sell</option>
+                <option value="oco">OCO</option>
             </select>
             <input type="number" id="limitPrice" class="hidden" placeholder="Limit Price" step="0.01" aria-label="Limit Price">
             <input type="number" id="stopLossPrice" class="hidden" placeholder="Stop-Loss" step="0.01" aria-label="Stop-Loss Price">
@@ -433,23 +509,52 @@
             <i class="fas fa-info-circle"></i> <span id="toastMessage"></span>
         </div>
 
+        <div class="modal" id="newsModal">
+            <div class="modal-content">
+                <button class="modal-close" id="closeNewsModal">×</button>
+                <h3>Market News</h3>
+                <div id="newsContent"></div>
+            </div>
+        </div>
+
+        <div class="modal" id="ordersModal">
+            <div class="modal-content">
+                <button class="modal-close" id="closeOrdersModal">×</button>
+                <h3>Active Orders</h3>
+                <div id="ordersContent"></div>
+            </div>
+        </div>
+
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <button class="modal-close" id="closeSettingsModal">×</button>
+                <h3>Settings</h3>
+                <div id="settingsContent">
+                    <p><label><input type="checkbox" id="autoRefresh" checked> Auto-Refresh Price</label></p>
+                    <p><label>Refresh Interval (s): <input type="number" id="refreshInterval" min="5" max="60" value="10"></label></p>
+                    <p><label>Username: <input type="text" id="usernameInput" value="Guest"></label></p>
+                </div>
+            </div>
+        </div>
+
         <footer>
-            © 2025 Quantum Stock Trader by yashnigam07. All rights reserved.
+            © 2049 TradePulse by yashnigam07. All rights reserved.
         </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
     <script src="config.js"></script>
     <script>
         // Utility Functions
         const $ = (id) => document.getElementById(id);
         const showToast = (message, type = 'info') => {
             const toast = $('toast');
-            $('toastMessage').textContent = message;
-            toast.className = `toast ${type} show`;
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            $('toastMessage').innerHTML = message;
+            toast.className = `toast ${type}`;
+            gsap.fromTo(toast, { x: '120%', opacity: 0 }, { x: '0%', opacity: 1, duration: 0.5, ease: 'power2.out', onComplete: () => toast.classList.add('show') });
+            setTimeout(() => gsap.to(toast, { x: '120%', opacity: 0, duration: 0.5, ease: 'power2.in', onComplete: () => toast.classList.remove('show') }), 4000);
+            if (soundEnabled) playSound(type);
         };
 
         const notify = (title, body) => {
@@ -457,14 +562,44 @@
             else if (Notification.permission !== 'denied') Notification.requestPermission().then(p => p === 'granted' && new Notification(title, { body }));
         };
 
+        const showModal = (id, content) => {
+            const modal = $(id);
+            $(`${id.replace('Modal', 'Content')}`).innerHTML = content;
+            modal.classList.add('show');
+            gsap.fromTo(modal, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.2)' });
+        };
+
+        const hideModal = (id) => {
+            const modal = $(id);
+            gsap.to(modal, {
+                opacity: 0,
+                scale: 0.95,
+                duration: 0.3,
+                ease: 'power2.in',
+                onComplete: () => modal.classList.remove('show')
+            });
+        };
+
+        let soundEnabled = true;
+        const sounds = {
+            success: new Audio('https://www.soundjay.com/buttons/beep-01a.mp3'),
+            error: new Audio('https://www.soundjay.com/buttons/beep-02.mp3'),
+            warning: new Audio('https://www.soundjay.com/buttons/beep-03.mp3'),
+            info: new Audio('https://www.soundjay.com/buttons/beep-04.mp3')
+        };
+
+        const playSound = (type) => {
+            sounds[type]?.play().catch(e => console.log('Sound playback failed:', e));
+        };
+
         // Simulator Class
         class StockSimulator {
-            constructor(username) {
-                this.username = username;
+            constructor() {
+                this.username = localStorage.getItem('username') || "Guest";
                 this.cash = 10000;
                 this.portfolio = {};
                 this.currentStock = 'AAPL';
-                this.stockPrices = { AAPL: 100, GOOGL: 100, TSLA: 100, BTC: 100 };
+                this.stockPrices = { AAPL: 100, GOOGL: 100, TSLA: 100, BTC: 100, ETH: 50, SPCE: 20 };
                 this.price = 100;
                 this.priceHistory = [{ time: new Date().toLocaleTimeString(), price: 100 }];
                 this.lastPrice = 100;
@@ -472,6 +607,7 @@
                 this.stopLossOrders = [];
                 this.takeProfitOrders = [];
                 this.shortPositions = [];
+                this.ocoOrders = [];
                 this.sentiment = { bullish: 50, bearish: 50, votes: { bullish: 0, bearish: 0 } };
                 this.leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '{}');
                 this.isLive = false;
@@ -479,6 +615,12 @@
                 this.maxApiCalls = 5;
                 this.performanceHistory = [{ time: new Date().toLocaleTimeString(), value: 10000 }];
                 this.apiKey = config.apiKey;
+                this.aiPrediction = null;
+                this.newsFeed = [];
+                this.holoDashboard = false;
+                this.autoRefresh = true;
+                this.refreshInterval = 10000;
+                this.orderHistory = [];
                 this.init();
             }
 
@@ -488,41 +630,139 @@
                 this.setupCharts();
                 this.loadData();
                 this.startSimulation();
+                this.fetchNews();
                 Notification.requestPermission();
                 this.applyTheme();
                 this.toggleCollapsibleCards();
+                this.animateUI();
             }
 
             setupUI() {
                 $('simulatorPage').classList.remove('hidden');
-                $('authPage').classList.add('hidden');
                 $('stockSelect').value = this.currentStock;
+                $('usernameInput').value = this.username;
 
                 $('buyBtn').addEventListener('click', () => this.handleBuy());
                 $('sellBtn').addEventListener('click', () => this.handleSell());
                 $('stockSelect').addEventListener('change', () => this.changeStock());
                 $('themeSelect').addEventListener('change', () => this.changeTheme());
-                $('logoutBtn').addEventListener('click', () => this.logout());
                 $('orderType').addEventListener('change', () => this.toggleOrderInputs());
                 $('voteBullish').addEventListener('click', () => this.vote('bullish'));
                 $('voteBearish').addEventListener('click', () => this.vote('bearish'));
                 $('exportBtn').addEventListener('click', () => this.exportData());
                 $('importBtn').addEventListener('click', () => $('importInput').click());
                 $('importInput').addEventListener('change', (e) => this.importData(e));
+                $('newsBtn').addEventListener('click', () => this.showNews());
+                $('aiPredictBtn').addEventListener('click', () => this.aiPredict());
+                $('ordersBtn').addEventListener('click', () => this.showOrders());
+                $('settingsBtn').addEventListener('click', () => this.showSettings());
+                $('closeNewsModal').addEventListener('click', () => hideModal('newsModal'));
+                $('closeOrdersModal').addEventListener('click', () => hideModal('ordersModal'));
+                $('closeSettingsModal').addEventListener('click', () => hideModal('settingsModal'));
+                $('newsModal').addEventListener('click', (e) => e.target === $('newsModal') && hideModal('newsModal'));
+                $('ordersModal').addEventListener('click', (e) => e.target === $('ordersModal') && hideModal('ordersModal'));
+                $('settingsModal').addEventListener('click', (e) => e.target === $('settingsModal') && hideModal('settingsModal'));
+                $('soundToggle').addEventListener('click', () => this.toggleSound());
+                $('dashboardToggle').addEventListener('click', () => this.toggleHoloDashboard());
+                $('simulatorPage').querySelector('h1').addEventListener('click', () => this.resetView());
+                $('autoRefresh').addEventListener('change', () => this.toggleAutoRefresh());
+                $('refreshInterval').addEventListener('change', () => this.updateRefreshInterval());
+                $('usernameInput').addEventListener('change', () => this.updateUsername());
+
+                // GSAP Button Hover Animations
+                document.querySelectorAll('.btn, .header-controls button, .dashboard-toggle').forEach(btn => {
+                    btn.addEventListener('mouseenter', () => gsap.to(btn, { scale: 1.05, duration: 0.2, ease: 'power2.out' }));
+                    btn.addEventListener('mouseleave', () => gsap.to(btn, { scale: 1, duration: 0.2, ease: 'power2.in' }));
+                });
+            }
+
+            animateUI() {
+                // Card Entrance Animation
+                gsap.from('.card', {
+                    opacity: 0,
+                    y: 20,
+                    stagger: 0.1,
+                    duration: 0.6,
+                    ease: 'power3.out',
+                    onComplete: () => document.querySelectorAll('.card').forEach(card => card.style.opacity = 1)
+                });
+
+                // Header Title Animation
+                gsap.from('header h1', { opacity: 0, x: -20, duration: 0.8, ease: 'power3.out' });
+
+                // Header Controls Animation
+                gsap.from('.header-controls > *', { opacity: 0, y: -10, stagger: 0.05, duration: 0.5, ease: 'power2.out' });
+
+                // Trading Panel Animation
+                gsap.from('.trading-panel > *', { opacity: 0, y: 10, stagger: 0.05, duration: 0.5, ease: 'power2.out', delay: 0.3 });
             }
 
             toggleOrderInputs() {
                 const type = $('orderType').value;
                 $('limitPrice').classList.toggle('hidden', type !== 'limit');
-                $('stopLossPrice').classList.toggle('hidden', type !== 'stop-loss');
-                $('takeProfitPrice').classList.toggle('hidden', type !== 'take-profit');
+                $('stopLossPrice').classList.toggle('hidden', type !== 'stop-loss' && type !== 'oco');
+                $('takeProfitPrice').classList.toggle('hidden', type !== 'take-profit' && type !== 'oco');
                 $('leverage').classList.toggle('hidden', type !== 'short');
             }
 
             toggleCollapsibleCards() {
                 document.querySelectorAll('.card h2').forEach(h2 => {
-                    h2.addEventListener('click', () => h2.parentElement.classList.toggle('collapsed'));
+                    h2.addEventListener('click', () => {
+                        const card = h2.parentElement;
+                        card.classList.toggle('collapsed');
+                        gsap.to(card.children, { height: card.classList.contains('collapsed') ? 0 : 'auto', duration: 0.3, ease: 'power2.inOut' });
+                    });
                 });
+            }
+
+            toggleSound() {
+                soundEnabled = !soundEnabled;
+                $('soundToggle').innerHTML = `<i class="fas fa-volume-${soundEnabled ? 'up' : 'mute'}"></i>`;
+                showToast(`Sound ${soundEnabled ? 'enabled' : 'disabled'}`, 'info');
+            }
+
+            toggleHoloDashboard() {
+                this.holoDashboard = !this.holoDashboard;
+                const grid = $('simulatorGrid');
+                gsap.to(grid, {
+                    rotateX: this.holoDashboard ? 8 : 0,
+                    z: this.holoDashboard ? 40 : 0,
+                    duration: 0.5,
+                    ease: 'power3.inOut'
+                });
+                $('dashboardToggle').innerHTML = `<i class="fas fa-${this.holoDashboard ? 'eye-slash' : 'eye'}"></i>`;
+                showToast(`Holo-Dashboard ${this.holoDashboard ? 'activated' : 'deactivated'}`, 'info');
+            }
+
+            resetView() {
+                this.holoDashboard = false;
+                gsap.to($('simulatorGrid'), { rotateX: 0, z: 0, duration: 0.5, ease: 'power3.inOut' });
+                $('dashboardToggle').innerHTML = '<i class="fas fa-eye"></i>';
+                showToast('View reset to default', 'info');
+            }
+
+            toggleAutoRefresh() {
+                this.autoRefresh = $('autoRefresh').checked;
+                showToast(`Auto-refresh ${this.autoRefresh ? 'enabled' : 'disabled'}`, 'info');
+            }
+
+            updateRefreshInterval() {
+                const interval = parseInt($('refreshInterval').value) * 1000;
+                if (interval >= 5000 && interval <= 60000) {
+                    this.refreshInterval = interval;
+                    this.restartSimulation();
+                    showToast(`Refresh interval set to ${interval / 1000}s`, 'info');
+                } else {
+                    showToast('Interval must be between 5 and 60 seconds', 'error');
+                    $('refreshInterval').value = this.refreshInterval / 1000;
+                }
+            }
+
+            updateUsername() {
+                this.username = $('usernameInput').value || 'Guest';
+                localStorage.setItem('username', this.username);
+                this.updateLeaderboard();
+                showToast(`Username updated to ${this.username}`, 'success');
             }
 
             setupCharts() {
@@ -531,22 +771,22 @@
                     data: {
                         labels: this.priceHistory.map(h => h.time),
                         datasets: [
-                            { label: 'Price', data: this.priceHistory.map(h => h.price), borderColor: 'var(--accent-cyan)', fill: true, backgroundColor: 'rgba(0, 229, 255, 0.1)', tension: 0.3 },
-                            { label: 'EMA(10)', data: this.calculateEMA(10), borderColor: 'var(--accent-orange)', fill: false, tension: 0.3 },
-                            { label: 'RSI', data: this.calculateRSI(14), borderColor: 'var(--accent-purple)', yAxisID: 'rsi', fill: false, tension: 0.3 },
-                            { label: 'Bollinger Upper', data: this.calculateBollingerBands(20).upper, borderColor: '#ffffff', fill: false, tension: 0.3, borderDash: [5, 5] },
-                            { label: 'Bollinger Lower', data: this.calculateBollingerBands(20).lower, borderColor: '#ffffff', fill: false, tension: 0.3, borderDash: [5, 5] }
+                            { label: 'Price', data: this.priceHistory.map(h => h.price), borderColor: 'var(--accent-blue)', fill: true, backgroundColor: 'rgba(96, 165, 250, 0.1)', tension: 0.4 },
+                            { label: 'EMA(10)', data: this.calculateEMA(10), borderColor: 'var(--accent-peach)', fill: false, tension: 0.4 },
+                            { label: 'RSI', data: this.calculateRSI(14), borderColor: 'var(--accent-lavender)', yAxisID: 'rsi', fill: false, tension: 0.4 },
+                            { label: 'Bollinger Upper', data: this.calculateBollingerBands(20).upper, borderColor: 'var(--text-secondary)', fill: false, tension: 0.4, borderDash: [5, 5] },
+                            { label: 'Bollinger Lower', data: this.calculateBollingerBands(20).lower, borderColor: 'var(--text-secondary)', fill: false, tension: 0.4, borderDash: [5, 5] }
                         ]
                     },
                     options: {
                         responsive: true,
                         scales: {
-                            y: { ticks: { callback: v => `$${v.toFixed(2)}` }, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
-                            rsi: { position: 'right', min: 0, max: 100, ticks: { color: 'var(--accent-purple)' }, grid: { display: false } },
-                            x: { ticks: { maxTicksLimit: 10 }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+                            y: { ticks: { callback: v => `$${v.toFixed(2)}` }, grid: { color: 'rgba(0, 0, 0, 0.03)' } },
+                            rsi: { position: 'right', min: 0, max: 100, ticks: { color: 'var(--accent-lavender)' }, grid: { display: false } },
+                            x: { ticks: { maxTicksLimit: 12 }, grid: { color: 'rgba(0, 0, 0, 0.03)' } }
                         },
                         plugins: {
-                            legend: { position: 'top', labels: { color: 'var(--text-primary)' } },
+                            legend: { position: 'top', labels: { color: 'var(--text-primary)', font: { size: 11 } } },
                             zoom: {
                                 zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'xy' },
                                 pan: { enabled: true, mode: 'xy' }
@@ -559,11 +799,11 @@
                     type: 'line',
                     data: {
                         labels: this.performanceHistory.map(h => h.time),
-                        datasets: [{ label: 'Portfolio Value', data: this.performanceHistory.map(h => h.value), borderColor: 'var(--accent-orange)', fill: true, backgroundColor: 'rgba(255, 140, 0, 0.1)' }]
+                        datasets: [{ label: 'Portfolio Value', data: this.performanceHistory.map(h => h.value), borderColor: 'var(--accent-peach)', fill: true, backgroundColor: 'rgba(251, 146, 60, 0.1)' }]
                     },
                     options: {
                         responsive: true,
-                        scales: { y: { ticks: { callback: v => `$${v.toFixed(2)}` } }, x: { ticks: { maxTicksLimit: 10 } } },
+                        scales: { y: { ticks: { callback: v => `$${v.toFixed(2)}` } }, x: { ticks: { maxTicksLimit: 12 } } },
                         plugins: { legend: { display: false } }
                     }
                 });
@@ -573,9 +813,7 @@
                 const prices = this.priceHistory.map(h => h.price);
                 const k = 2 / (period + 1);
                 const ema = [prices[0]];
-                for (let i = 1; i < prices.length; i++) {
-                    ema.push(prices[i] * k + ema[i - 1] * (1 - k));
-                }
+                for (let i = 1; i < prices.length; i++) ema.push(prices[i] * k + ema[i - 1] * (1 - k));
                 return ema;
             }
 
@@ -590,12 +828,12 @@
                 }
                 let avgGain = gains.slice(0, period).reduce((a, b) => a + b, 0) / period;
                 let avgLoss = losses.slice(0, period).reduce((a, b) => a + b, 0) / period;
-                const rs = avgGain / avgLoss;
-                const rsi = [null, ...Array(period - 1).fill(null), 100 - (100 / (1 + rs))];
+                const rs = avgGain / avgLoss || 0;
+                const rsi = [null, ...Array(period - 1).fill(null), rs ? 100 - (100 / (1 + rs)) : 50];
                 for (let i = period; i < gains.length; i++) {
                     avgGain = (avgGain * (period - 1) + gains[i]) / period;
                     avgLoss = (avgLoss * (period - 1) + losses[i]) / period;
-                    rsi.push(100 - (100 / (1 + avgGain / avgLoss)));
+                    rsi.push(avgGain / avgLoss ? 100 - (100 / (1 + avgGain / avgLoss)) : 50);
                 }
                 return rsi;
             }
@@ -620,15 +858,21 @@
             }
 
             startSimulation() {
-                setInterval(() => this.updatePrice(), 15000);
-                setInterval(() => this.simulateDarkPool(), 30000);
+                this.priceInterval = setInterval(() => this.autoRefresh && this.updatePrice(), this.refreshInterval);
+                this.darkPoolInterval = setInterval(() => this.simulateDarkPool(), 20000);
+                this.eventInterval = setInterval(() => this.simulateMarketEvent(), 30000);
                 this.updateUI();
+            }
+
+            restartSimulation() {
+                clearInterval(this.priceInterval);
+                this.priceInterval = setInterval(() => this.autoRefresh && this.updatePrice(), this.refreshInterval);
             }
 
             async updatePrice() {
                 if (this.apiCalls < this.maxApiCalls) {
                     try {
-                        const symbol = this.currentStock === 'BTC' ? 'BTCUSD' : this.currentStock;
+                        const symbol = this.currentStock === 'BTC' ? 'BTCUSD' : this.currentStock === 'ETH' ? 'ETHUSD' : this.currentStock;
                         const res = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${this.apiKey}`);
                         const data = await res.json();
                         if (data['Global Quote'] && data['Global Quote']['05. price']) {
@@ -653,7 +897,7 @@
 
             simulatePrice() {
                 this.lastPrice = this.price;
-                const volatility = this.currentStock === 'BTC' ? 0.05 : 0.02;
+                const volatility = this.currentStock === 'BTC' || this.currentStock === 'ETH' ? 0.05 : 0.02;
                 this.price *= (1 + (Math.random() - 0.5) * volatility);
                 this.price = Math.max(10, this.price.toFixed(2));
                 this.stockPrices[this.currentStock] = this.price;
@@ -664,6 +908,20 @@
                 const impact = (Math.random() - 0.5) * 0.03;
                 this.price *= (1 + impact);
                 showToast(`Dark pool trade: ${impact > 0 ? 'Buy' : 'Sell'} pressure`, impact > 0 ? 'success' : 'error');
+                this.updateUI();
+            }
+
+            simulateMarketEvent() {
+                const events = [
+                    { msg: `${this.currentStock} CEO announces breakthrough!`, impact: 0.05 },
+                    { msg: `Regulatory concerns hit ${this.currentStock}.`, impact: -0.04 },
+                    { msg: `Market rumors swirl around ${this.currentStock}.`, impact: (Math.random() - 0.5) * 0.03 },
+                    { msg: `${this.currentStock} earnings exceed expectations!`, impact: 0.06 },
+                    { msg: `Geopolitical tensions affect ${this.currentStock}.`, impact: -0.03 }
+                ];
+                const event = events[Math.floor(Math.random() * events.length)];
+                this.price *= (1 + event.impact);
+                showToast(event.msg, event.impact > 0 ? 'success' : 'error');
                 this.updateUI();
             }
 
@@ -731,9 +989,9 @@
 
             updateAnalytics() {
                 $('sharpeRatio').textContent = this.calculateSharpeRatio();
-                const totalVotes = this.sentiment.votes.bullish + this.sentiment.votes.bearish;
-                $('bullish').textContent = totalVotes ? `${(this.sentiment.votes.bullish / totalVotes * 100).toFixed(0)}%` : '50%';
-                $('bearish').textContent = totalVotes ? `${(this.sentiment.votes.bearish / totalVotes * 100).toFixed(0)}%` : '50%';
+                const totalVotes = this.sentiment.votes.bullish + this.sentiment.votes.bearish || 1;
+                $('bullish').textContent = `${(this.sentiment.votes.bullish / totalVotes * 100).toFixed(0)}%`;
+                $('bearish').textContent = `${(this.sentiment.votes.bearish / totalVotes * 100).toFixed(0)}%`;
             }
 
             updateLeaderboard() {
@@ -753,24 +1011,34 @@
 
                 if (!this.validateOrder(qty, cost, 'buy')) return;
 
+                const order = { type, qty, price, leverage, timestamp: new Date().toLocaleString(), status: 'Pending' };
                 if (type === 'limit' && this.price > price) {
-                    this.limitOrders.push({ type: 'buy', qty, price });
+                    this.limitOrders.push(order);
                     showToast(`Limit buy placed at $${price.toFixed(2)}`, 'info');
                 } else if (type === 'stop-loss') {
-                    this.stopLossOrders.push({ qty, price });
+                    this.stopLossOrders.push(order);
                     showToast(`Stop-loss set at $${price.toFixed(2)}`, 'info');
                 } else if (type === 'take-profit') {
-                    this.takeProfitOrders.push({ qty, price });
+                    this.takeProfitOrders.push(order);
                     showToast(`Take-profit set at $${price.toFixed(2)}`, 'info');
                 } else if (type === 'short') {
-                    this.shortPositions.push({ qty, entryPrice: this.price, leverage, margin: cost / leverage });
-                    this.cash -= cost / leverage;
+                    order.entryPrice = this.price;
+                    order.margin = cost / leverage;
+                    this.shortPositions.push(order);
+                    this.cash -= order.margin;
                     showToast(`Short position opened: ${qty} ${this.currentStock} @ ${leverage}x`, 'info');
+                } else if (type === 'oco') {
+                    order.stopLoss = parseFloat($('stopLossPrice').value);
+                    order.takeProfit = parseFloat($('takeProfitPrice').value);
+                    this.ocoOrders.push(order);
+                    showToast(`OCO order placed`, 'info');
                 } else {
                     this.cash -= cost;
                     this.portfolio[this.currentStock] = this.portfolio[this.currentStock] || { qty: 0, totalSpent: 0 };
                     this.portfolio[this.currentStock].qty += qty;
                     this.portfolio[this.currentStock].totalSpent += cost;
+                    order.status = 'Executed';
+                    this.orderHistory.push(order);
                     showToast(`Bought ${qty} ${this.currentStock} for $${cost.toFixed(2)}`, 'success');
                 }
                 this.saveData();
@@ -788,21 +1056,29 @@
                     return;
                 }
 
+                const order = { type, qty, price, timestamp: new Date().toLocaleString(), status: 'Pending' };
                 if (type === 'limit' && this.price < price) {
-                    this.limitOrders.push({ type: 'sell', qty, price });
+                    this.limitOrders.push(order);
                     showToast(`Limit sell placed at $${price.toFixed(2)}`, 'info');
                 } else if (type === 'stop-loss') {
-                    this.stopLossOrders.push({ qty, price });
+                    this.stopLossOrders.push(order);
                     showToast(`Stop-loss set at $${price.toFixed(2)}`, 'info');
                 } else if (type === 'take-profit') {
-                    this.takeProfitOrders.push({ qty, price });
+                    this.takeProfitOrders.push(order);
                     showToast(`Take-profit set at $${price.toFixed(2)}`, 'info');
+                } else if (type === 'oco') {
+                    order.stopLoss = parseFloat($('stopLossPrice').value);
+                    order.takeProfit = parseFloat($('takeProfitPrice').value);
+                    this.ocoOrders.push(order);
+                    showToast(`OCO order placed`, 'info');
                 } else {
                     this.cash += revenue;
                     const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
                     this.portfolio[this.currentStock].qty -= qty;
                     this.portfolio[this.currentStock].totalSpent -= avgCost * qty;
                     if (this.portfolio[this.currentStock].qty === 0) delete this.portfolio[this.currentStock];
+                    order.status = 'Executed';
+                    this.orderHistory.push(order);
                     showToast(`Sold ${qty} ${this.currentStock} for $${revenue.toFixed(2)}`, 'success');
                 }
                 this.saveData();
@@ -824,12 +1100,25 @@
             checkOrders() {
                 this.limitOrders = this.limitOrders.filter(o => {
                     if (o.type === 'buy' && this.price <= o.price) {
-                        this.handleBuy(o.qty, o.price);
+                        this.cash -= o.qty * o.price;
+                        this.portfolio[this.currentStock] = this.portfolio[this.currentStock] || { qty: 0, totalSpent: 0 };
+                        this.portfolio[this.currentStock].qty += o.qty;
+                        this.portfolio[this.currentStock].totalSpent += o.qty * o.price;
+                        o.status = 'Executed';
+                        this.orderHistory.push(o);
                         notify('Limit Buy Executed', `${o.qty} ${this.currentStock} @ $${o.price.toFixed(2)}`);
+                        showToast(`Limit buy executed: ${o.qty} ${this.currentStock} @ $${o.price.toFixed(2)}`, 'success');
                         return false;
                     } else if (o.type === 'sell' && this.price >= o.price) {
-                        this.handleSell(o.qty, o.price);
+                        this.cash += o.qty * o.price;
+                        const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
+                        this.portfolio[this.currentStock].qty -= o.qty;
+                        this.portfolio[this.currentStock].totalSpent -= avgCost * o.qty;
+                        if (this.portfolio[this.currentStock].qty === 0) delete this.portfolio[this.currentStock];
+                        o.status = 'Executed';
+                        this.orderHistory.push(o);
                         notify('Limit Sell Executed', `${o.qty} ${this.currentStock} @ $${o.price.toFixed(2)}`);
+                        showToast(`Limit sell executed: ${o.qty} ${this.currentStock} @ $${o.price.toFixed(2)}`, 'success');
                         return false;
                     }
                     return true;
@@ -837,8 +1126,15 @@
 
                 this.stopLossOrders = this.stopLossOrders.filter(o => {
                     if (this.price <= o.price) {
-                        this.handleSell(o.qty, this.price);
+                        this.cash += o.qty * this.price;
+                        const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
+                        this.portfolio[this.currentStock].qty -= o.qty;
+                        this.portfolio[this.currentStock].totalSpent -= avgCost * o.qty;
+                        if (this.portfolio[this.currentStock].qty === 0) delete this.portfolio[this.currentStock];
+                        o.status = 'Executed';
+                        this.orderHistory.push(o);
                         notify('Stop-Loss Triggered', `${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`);
+                        showToast(`Stop-loss triggered: ${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`, 'error');
                         return false;
                     }
                     return true;
@@ -846,8 +1142,42 @@
 
                 this.takeProfitOrders = this.takeProfitOrders.filter(o => {
                     if (this.price >= o.price) {
-                        this.handleSell(o.qty, this.price);
+                        this.cash += o.qty * this.price;
+                        const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
+                        this.portfolio[this.currentStock].qty -= o.qty;
+                        this.portfolio[this.currentStock].totalSpent -= avgCost * o.qty;
+                        if (this.portfolio[this.currentStock].qty === 0) delete this.portfolio[this.currentStock];
+                        o.status = 'Executed';
+                        this.orderHistory.push(o);
                         notify('Take-Profit Triggered', `${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`);
+                        showToast(`Take-profit triggered: ${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`, 'success');
+                        return false;
+                    }
+                    return true;
+                });
+
+                this.ocoOrders = this.ocoOrders.filter(o => {
+                    if (this.price <= o.stopLoss) {
+                        this.cash += o.qty * this.price;
+                        const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
+                        this.portfolio[this.currentStock].qty -= o.qty;
+                        this.portfolio[this.currentStock].totalSpent -= avgCost * o.qty;
+                        if (this.portfolio[this.currentStock].qty === 0) delete this.portfolio[this.currentStock];
+                        o.status = 'Executed (Stop-Loss)';
+                        this.orderHistory.push(o);
+                        notify('OCO Stop-Loss Triggered', `${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`);
+                        showToast(`OCO stop-loss triggered: ${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`, 'error');
+                        return false;
+                    } else if (this.price >= o.takeProfit) {
+                        this.cash += o.qty * this.price;
+                        const avgCost = this.portfolio[this.currentStock].totalSpent / this.portfolio[this.currentStock].qty;
+                        this.portfolio[this.currentStock].qty -= o.qty;
+                        this.portfolio[this.currentStock].totalSpent -= avgCost * o.qty;
+                        if (this.portfolio[this.currentStock].qty === 0) delete this.portfolio[this.currentStock];
+                        o.status = 'Executed (Take-Profit)';
+                        this.orderHistory.push(o);
+                        notify('OCO Take-Profit Triggered', `${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`);
+                        showToast(`OCO take-profit triggered: ${o.qty} ${this.currentStock} @ $${this.price.toFixed(2)}`, 'success');
                         return false;
                     }
                     return true;
@@ -857,6 +1187,8 @@
                     const loss = (this.price - p.entryPrice) * p.qty * p.leverage;
                     if (loss > p.margin * 0.9) {
                         this.cash -= loss;
+                        p.status = 'Liquidated';
+                        this.orderHistory.push(p);
                         showToast(`Short position liquidated: Loss $${loss.toFixed(2)}`, 'error');
                         notify('Short Liquidation', `Loss: $${loss.toFixed(2)}`);
                         return false;
@@ -888,10 +1220,12 @@
                 const theme = $('themeSelect').value;
                 document.body.className = `${theme}-theme`;
                 localStorage.setItem('theme', theme);
+                this.priceChart.update();
+                this.performanceChart.update();
             }
 
             applyTheme() {
-                const theme = localStorage.getItem('theme') || 'cyberpunk';
+                const theme = localStorage.getItem('theme') || 'default';
                 $('themeSelect').value = theme;
                 document.body.className = `${theme}-theme`;
             }
@@ -905,9 +1239,11 @@
                     stopLossOrders: this.stopLossOrders,
                     takeProfitOrders: this.takeProfitOrders,
                     shortPositions: this.shortPositions,
+                    ocoOrders: this.ocoOrders,
                     stockPrices: this.stockPrices,
                     sentiment: this.sentiment,
-                    performanceHistory: this.performanceHistory
+                    performanceHistory: this.performanceHistory,
+                    orderHistory: this.orderHistory
                 }));
             }
 
@@ -921,12 +1257,12 @@
             }
 
             exportData() {
-                const data = { cash: this.cash, portfolio: this.portfolio };
+                const data = { cash: this.cash, portfolio: this.portfolio, orderHistory: this.orderHistory };
                 const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `portfolio_${this.username}.json`;
+                a.download = `portfolio_${this.username}_${Date.now()}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
                 showToast('Portfolio exported', 'success');
@@ -941,6 +1277,7 @@
                         const data = JSON.parse(ev.target.result);
                         this.cash = data.cash;
                         this.portfolio = data.portfolio;
+                        this.orderHistory = data.orderHistory || [];
                         this.saveData();
                         this.updateUI();
                         showToast('Portfolio imported', 'success');
@@ -951,62 +1288,46 @@
                 reader.readAsText(file);
             }
 
-            logout() {
-                localStorage.removeItem('loggedInUser');
-                $('simulatorPage').classList.add('hidden');
-                $('authPage').classList.remove('hidden');
-                $('loginCard').classList.remove('hidden');
-                $('signUpCard').classList.add('hidden');
-                showToast('Logged out', 'info');
-            }
-        }
-
-        // Authentication
-        class Auth {
-            static init() {
-                const loggedInUser = localStorage.getItem('loggedInUser');
-                if (loggedInUser) return new StockSimulator(loggedInUser);
-
-                $('loginBtn').addEventListener('click', Auth.login);
-                $('signUpBtn').addEventListener('click', Auth.signUp);
-                $('toggleToSignUp').addEventListener('click', () => {
-                    $('loginCard').classList.add('hidden');
-                    $('signUpCard').classList.remove('hidden');
-                });
-                $('toggleToLogin').addEventListener('click', () => {
-                    $('signUpCard').classList.add('hidden');
-                    $('loginCard').classList.remove('hidden');
-                });
-            }
-
-            static async login() {
-                const username = $('loginUsername').value.trim();
-                const password = $('loginPassword').value.trim();
-                if (!username || !password) return showToast('All fields required', 'error');
-
-                const users = JSON.parse(localStorage.getItem('users') || '{}');
-                if (!users[username] || !(await bcrypt.compare(password, users[username]))) {
-                    return showToast('Invalid credentials', 'error');
+            async fetchNews() {
+                try {
+                    this.newsFeed = [
+                        { title: `${this.currentStock} Surges Amid New Developments`, url: '#' },
+                        { title: 'Market Analysts Predict Bullish Trend for Tech Stocks', url: '#' },
+                        { title: 'Crypto Volatility Expected This Week', url: '#' },
+                        { title: `${this.currentStock} Partners with AI Firm`, url: '#' }
+                    ];
+                } catch (e) {
+                    console.error('Failed to fetch news:', e);
+                    showToast('Unable to fetch news', 'warning');
                 }
-
-                localStorage.setItem('loggedInUser', username);
-                new StockSimulator(username);
             }
 
-            static async signUp() {
-                const username = $('signUpUsername').value.trim();
-                const password = $('signUpPassword').value.trim();
-                const confirm = $('signUpConfirmPassword').value.trim();
-                if (!username || !password || !confirm) return showToast('All fields required', 'error');
-                if (password !== confirm) return showToast('Passwords do not match', 'error');
+            showNews() {
+                const newsList = this.newsFeed.map(n => `<a href="${n.url}" target="_blank">${n.title}</a>`).join('<br>');
+                showModal('newsModal', newsList);
+            }
 
-                const users = JSON.parse(localStorage.getItem('users') || '{}');
-                if (users[username]) return showToast('Username taken', 'error');
+            showOrders() {
+                const allOrders = [
+                    ...this.limitOrders.map(o => ({ type: `Limit ${o.type}`, qty: o.qty, price: o.price, status: o.status, timestamp: o.timestamp })),
+                    ...this.stopLossOrders.map(o => ({ type: 'Stop-Loss', qty: o.qty, price: o.price, status: o.status, timestamp: o.timestamp })),
+                    ...this.takeProfitOrders.map(o => ({ type: 'Take-Profit', qty: o.qty, price: o.price, status: o.status, timestamp: o.timestamp })),
+                    ...this.shortPositions.map(o => ({ type: 'Short', qty: o.qty, price: o.entryPrice, leverage: o.leverage, status: o.status, timestamp: o.timestamp })),
+                    ...this.ocoOrders.map(o => ({ type: 'OCO', qty: o.qty, stopLoss: o.stopLoss, takeProfit: o.takeProfit, status: o.status, timestamp: o.timestamp })),
+                    ...this.orderHistory.map(o => o)
+                ];
+                const content = allOrders.length ? `<div class="order-list">${allOrders.map(o => `<div>${o.type} - ${o.qty} @ $${o.price || o.stopLoss || o.takeProfit} ${o.leverage ? `@ ${o.leverage}x` : ''} - ${o.status} (${o.timestamp})</div>`).join('')}</div>` : '<p>No active orders</p>';
+                showModal('ordersModal', content);
+            }
 
-                users[username] = await bcrypt.hash(password, 10);
-                localStorage.setItem('users', JSON.stringify(users));
-                localStorage.setItem('loggedInUser', username);
-                new StockSimulator(username);
+            showSettings() {
+                showModal('settingsModal', $('settingsContent').innerHTML);
+            }
+
+            aiPredict() {
+                const trend = this.priceHistory.slice(-10).reduce((acc, h, i, arr) => acc + (i > 0 ? h.price - arr[i - 1].price : 0), 0);
+                this.aiPrediction = trend > 0 ? 'Bullish' : trend < 0 ? 'Bearish' : 'Neutral';
+                showToast(`AI Prediction: ${this.aiPrediction} trend expected in next 24h`, 'success');
             }
         }
 
@@ -1015,7 +1336,7 @@
             if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
                 showToast('Warning: Use HTTPS for security', 'warning');
             }
-            Auth.init();
+            new StockSimulator();
         });
     </script>
 </body>
